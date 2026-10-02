@@ -1,0 +1,14 @@
+// One small real Gemini request, using a copy of Windows-encrypted preferences.
+// Never print key, request headers or the contents of the preference file.
+import {_electron as electron}from'playwright';import fs from'node:fs/promises';import path from'node:path';import{createFixture}from'./fixture.mjs';
+const project=process.cwd(),output=path.join(project,'test-results'),profile=path.join(output,`chat-live-profile-${Date.now()}`);
+let saved;try{saved=JSON.parse(await fs.readFile(path.join(process.env.APPDATA,'rm-reader','preferences.json'),'utf8'));}catch{}
+if(!saved?.encryptedKey){console.log('SKIP No existing encrypted Gemini key available.');process.exit(0);}
+console.log(JSON.stringify({configuredModel:saved.settings?.chatModel||saved.settings?.model,configuredFallback:saved.settings?.autoFallback}));
+await fs.mkdir(profile,{recursive:true});await fs.writeFile(path.join(profile,'preferences.json'),JSON.stringify({encryptedKey:saved.encryptedKey,settings:{...saved.settings,autoFallback:true,chatOutputTokens:512,chatContextChars:4000,autoTranslate:false},documents:{},vocabulary:[],annotations:[]}));saved=null;
+await fs.copyFile(path.join(process.env.APPDATA,'rm-reader','Local State'),path.join(profile,'Local State')).catch(()=>{});
+const file=path.join(output,'chat-live-demo.pdf');await createFixture(file,8);const env={...process.env,RM_TEST_MODE:'1',RM_TEST_DATA:profile};delete env.ELECTRON_RUN_AS_NODE;let app;
+try{app=await electron.launch({args:[project],cwd:project,env,timeout:60000});const page=await app.firstWindow();await page.waitForFunction(()=>!!window.rmTest);await app.evaluate(({dialog},file)=>{dialog.showOpenDialog=async()=>({canceled:false,filePaths:[file]});},file);await page.click('#open-pdf');await page.waitForFunction(()=>window.rmReader.document&&window.rmTest.pdfViewer.pagesCount===8);
+ const result=await page.evaluate(async()=>{const ctx=window.rmReader.chatContext(),c=await window.desktop.createChat({tokens:[ctx.info.token]});return window.desktop.sendChat({conversationId:c.id,question:'Giải thích ngắn gọn cơ chế W1C bằng tiếng Việt và dẫn nguồn. Không cần mã.',scope:'live test excerpt',sources:[{token:ctx.info.token,page:1,text:'Write one to clear the pending interrupt flag.',owner:'left',rects:[]}]});});
+ const citationIds=[...result.text.matchAll(/\[\s*SRC\s*:\s*([\w-]+)\s*\]/gi)].map(m=>m[1]);const report={status:result.status,model:result.model,usage:result.usage,citationValid:citationIds.some(id=>result.sources.some(s=>s.id===id)),error:result.error||null};await fs.writeFile(path.join(output,'chat-live-check.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));if(result.status!=='complete'||!report.citationValid)process.exitCode=1;
+}catch(e){console.error(String(e.message).replace(/AIza[\w-]{20,}/g,'[redacted]'));process.exitCode=1;}finally{await app?.close().catch(()=>{});}

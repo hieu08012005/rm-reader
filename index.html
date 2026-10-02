@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'self' rm-pdf: http://127.0.0.1:5173 ws://127.0.0.1:5173; object-src 'none'; base-uri 'self'" />
+  <title>RM Reader</title>
+  <link rel="icon" type="image/png" href="/app-taskbar.png">
+</head>
+<body>
+  <header class="toolbar">
+    <div class="brand"><img class="brand-logo" src="/app-icon.png" alt="Biểu tượng RM Reader"><span>Reader<small>TÀI LIỆU NHÚNG</small></span></div>
+    <span class="separator"></span>
+    <button id="open-pdf" class="primary" title="Mở PDF · Ctrl+O"><i data-icon="folder"></i><span>Mở PDF</span></button>
+    <button id="toggle-outline" class="icon-button" title="Ẩn/hiện mục lục" aria-label="Ẩn/hiện mục lục"><i data-icon="sidebar"></i></button>
+    <button id="toggle-attachments" class="icon-button" title="Tệp đính kèm trong PDF" aria-label="Tệp đính kèm" aria-pressed="false"><i data-icon="attachment"></i></button>
+    <span class="separator"></span>
+    <div id="primary-controls" class="reader-controls">
+    <button id="back" class="icon-button" title="Quay lại · Alt+← / Back trên chuột" aria-label="Quay lại" disabled><i data-icon="back"></i></button>
+    <button id="forward" class="icon-button" title="Tiến tới · Alt+→ / Forward trên chuột" aria-label="Tiến tới" disabled><i data-icon="forward"></i></button>
+    <div class="page-control"><input id="page-number" type="number" min="1" value="1" aria-label="Trang hiện tại" disabled><span>/ <b id="page-count">—</b></span></div>
+    <span class="separator"></span>
+    <button id="zoom-out" class="icon-button pdf-control" title="Thu nhỏ" aria-label="Thu nhỏ" disabled><i data-icon="minus"></i></button>
+    <select id="zoom" class="pdf-control" aria-label="Mức phóng to" disabled>
+      <option value="page-width">Vừa chiều rộng</option><option value="page-fit">Vừa trang</option>
+      <option value="0.75">75%</option><option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="2">200%</option><option value="3">300%</option><option value="custom" hidden></option>
+    </select>
+    <button id="zoom-in" class="icon-button pdf-control" title="Phóng to" aria-label="Phóng to" disabled><i data-icon="plus"></i></button>
+    </div>
+    <div class="toolbar-spacer"></div>
+    <button id="toggle-find" class="icon-button" title="Tìm trong PDF · Ctrl+F" aria-label="Tìm trong PDF"><i data-icon="search"></i></button>
+    <button id="toggle-translation" class="icon-button" title="Ẩn/hiện bản dịch" aria-label="Ẩn/hiện bản dịch"><i data-icon="translate"></i></button>
+    <button id="vocabulary-button" class="icon-button" title="Danh sách vocab đã lưu" aria-label="Danh sách vocab"><i data-icon="book"></i></button>
+    <button id="annotations-button" class="icon-button" title="Đánh dấu và ghi chú" aria-label="Danh sách ghi chú"><i data-icon="note"></i></button>
+    <button id="compare-button" class="secondary" title="Xem hai PDF cạnh nhau" aria-pressed="false"><i data-icon="compare"></i><span>Hai PDF</span></button>
+    <button id="settings-button" class="icon-button" title="Cài đặt dịch" aria-label="Cài đặt dịch"><i data-icon="settings"></i></button>
+  </header>
+  <nav class="document-tabs" aria-label="Tài liệu đang mở">
+    <div id="document-tabs" role="tablist" aria-label="Các tab PDF"></div>
+    <button id="new-tab" class="icon-button" title="Mở thêm PDF · Ctrl+O" aria-label="Mở thêm PDF"><i data-icon="plus"></i></button>
+    <span id="app-version" title="Phiên bản RM Reader"></span>
+    <span id="document-name" hidden>Chưa mở tài liệu</span><span id="document-meta" hidden></span>
+  </nav>
+  <div id="find-bar" class="find-bar" hidden>
+    <i data-icon="search"></i><input id="find-input" placeholder="Tìm trong tài liệu…" aria-label="Từ cần tìm">
+    <span id="find-count">Nhập từ cần tìm</span><button id="find-prev" class="icon-button" aria-label="Kết quả trước"><i data-icon="up"></i></button><button id="find-next" class="icon-button" aria-label="Kết quả sau"><i data-icon="down"></i></button>
+    <label class="check-label"><input id="find-case" type="checkbox">Phân biệt hoa/thường</label>
+    <button id="find-close" class="icon-button" aria-label="Đóng tìm kiếm"><i data-icon="close"></i></button>
+  </div>
+  <main id="workspace">
+    <aside id="outline-panel">
+      <div class="panel-heading"><div><span class="eyebrow">ĐIỀU HƯỚNG</span><h2>Mục lục</h2></div><button id="outline-close" class="icon-button" aria-label="Đóng mục lục"><i data-icon="sidebar"></i></button></div>
+      <div class="outline-search"><i data-icon="search"></i><input id="outline-filter" placeholder="Tìm chương, mục…" aria-label="Tìm trong mục lục"></div>
+      <nav id="outline-tree" aria-label="Mục lục tài liệu"><p class="empty-note">Mục lục sẽ xuất hiện khi bạn mở tài liệu PDF.</p></nav>
+      <div class="sidebar-tip"><i data-icon="mouse"></i><span>Nhấp liên kết để đi tới.<br><b>Back trên chuột</b> để quay lại.</span></div>
+    </aside>
+    <aside id="attachments-panel" hidden aria-label="Tệp đính kèm trong PDF">
+      <div class="panel-heading"><div><span class="eyebrow">ATTACHMENTS</span><h2>Tệp đính kèm <span id="attachments-count"></span></h2></div><button id="attachments-close" class="icon-button" aria-label="Đóng tệp đính kèm"><i data-icon="close"></i></button></div>
+      <p id="attachments-source"></p>
+      <div class="attachments-tools"><label class="attachments-search"><i data-icon="search"></i><input id="attachments-filter" type="search" placeholder="Tìm tên tệp hoặc mô tả…" aria-label="Tìm tệp đính kèm"></label><button id="attachments-save-all" class="secondary" disabled><i data-icon="save"></i>Lưu tất cả</button></div>
+      <div id="attachments-list"></div><p id="attachments-status" role="status"></p>
+    </aside>
+    <div id="pdf-panes"><section id="reader-area" aria-label="Nội dung PDF">
+      <div id="left-pane-heading" hidden><div class="pane-caption"><span>BÊN TRÁI</span><b id="left-pane-name">Chọn một PDF</b></div><div id="left-pane-controls"></div></div>
+      <div id="markup-toolbar" role="toolbar" aria-label="Tô màu, vẽ và ghi chú PDF">
+        <button id="tool-select" data-tool="select" aria-pressed="true" title="Chọn văn bản / Dịch · Esc"><i data-icon="select"></i><span>Chọn</span></button>
+        <button id="tool-highlight" data-tool="highlight" aria-pressed="false" title="Bôi đen để tô màu liên tục"><i data-icon="highlight"></i><span>Tô màu</span></button>
+        <select id="tool-highlight-color" aria-label="Màu tô"><option value="yellow">Vàng</option><option value="green">Xanh lá</option><option value="blue">Xanh dương</option><option value="pink">Hồng</option></select>
+        <button id="tool-draw" data-tool="draw" aria-pressed="false" title="Vẽ tự do trên PDF"><i data-icon="pen"></i><span>Vẽ</span></button>
+        <button id="tool-erase" data-tool="erase" aria-pressed="false" title="Kéo để tẩy vùng tô và nét vẽ"><i data-icon="eraser"></i><span>Tẩy</span></button>
+        <button id="tool-textbox" data-tool="textbox" aria-pressed="false" title="Nhấn vào trang để đặt hộp văn bản"><i data-icon="textbox"></i><span>Text box</span></button>
+        <label id="tool-color-label" hidden>Màu <input id="tool-color" type="color" value="#e5484d" aria-label="Màu bút / chữ"></label>
+        <label id="tool-width-label" hidden>Nét <select id="tool-width" aria-label="Độ dày nét bút"><option value="1">1</option><option value="2" selected>2</option><option value="4">4</option><option value="8">8</option><option value="12">12</option></select></label>
+        <label id="tool-eraser-label" hidden>Tẩy <select id="tool-eraser-size" aria-label="Kích thước tẩy"><option value="12">Nhỏ</option><option value="24" selected>Vừa</option><option value="48">Lớn</option></select></label>
+        <label id="tool-font-label" hidden>Chữ <select id="tool-font-size" aria-label="Cỡ chữ text box"><option value="12">12</option><option value="16" selected>16</option><option value="20">20</option><option value="24">24</option><option value="32">32</option></select></label>
+        <span id="tool-hint">Chọn văn bản để dịch hoặc ghi chú</span><span id="markup-status" role="status"></span>
+      </div>
+      <div id="viewerContainer" tabindex="0"><div id="viewer" class="pdfViewer"></div></div>
+      <div id="welcome">
+        <span class="welcome-tag">KHÔNG GIAN ĐỌC TÀI LIỆU KỸ THUẬT</span>
+        <div class="welcome-icon"><i data-icon="book"></i><span>EN <i data-icon="forward"></i> VI</span></div>
+        <h1>Hiểu tài liệu.<br><span>Tập trung vào mã.</span></h1>
+        <p>Đọc reference manual, theo dõi các liên kết<br>và dịch thuật ngữ theo ngữ cảnh lập trình nhúng.</p>
+        <button id="welcome-open" class="primary large"><i data-icon="folder"></i>Mở tài liệu PDF<i data-icon="forward"></i></button>
+        <span class="drop-hint">hoặc kéo thả file vào cửa sổ này</span>
+        <div class="welcome-features"><span><i data-icon="list"></i>Mục lục có liên kết</span><span><i data-icon="translate"></i>Dịch vùng bôi đen</span><span><i data-icon="mouse"></i>Back đúng vị trí</span></div>
+        <div id="recent-documents" hidden><h3>TÀI LIỆU GẦN ĐÂY</h3><div id="recent-list"></div></div>
+      </div>
+      <div id="loading" hidden><span class="spinner"></span><strong id="loading-text">Đang mở tài liệu…</strong></div>
+      <div id="drop-overlay" hidden><i data-icon="folder"></i><strong>Thả file PDF để mở</strong></div>
+    </section>
+    <div id="compare-resizer" hidden role="separator" aria-label="Điều chỉnh hai PDF" aria-orientation="vertical" tabindex="0"></div>
+    <section id="comparison-pane" hidden aria-label="PDF bên phải"><iframe id="comparison-frame" title="PDF bên phải"></iframe></section>
+    </div>
+    <div id="translation-resizer" role="separator" aria-label="Điều chỉnh chiều rộng bản dịch" aria-orientation="vertical" tabindex="0"></div>
+    <aside id="translation-panel">
+      <div class="right-panel-tabs" role="tablist" aria-label="Trợ lý tài liệu"><button id="right-tab-translation" role="tab" aria-selected="true">Bản dịch</button><button id="right-tab-chat" role="tab" aria-selected="false">Chat AI</button></div>
+      <section id="translation-view">
+      <div class="panel-heading"><div><span class="eyebrow">ENGLISH → TIẾNG VIỆT</span><h2>Bản dịch</h2></div><button id="translation-close" class="icon-button" aria-label="Đóng bản dịch"><i data-icon="close"></i></button></div>
+      <div class="translation-context"><i data-icon="chip"></i><div><b>Ngữ cảnh lập trình nhúng</b><span>Vi điều khiển · thanh ghi · ngoại vi</span></div></div>
+      <div id="translation-empty"><div class="select-illustration">Interrupt <span>▏</span></div><h3>Bôi đen để hiểu rõ hơn</h3><p>Chọn một từ hoặc đoạn văn trong PDF, rồi nhấn <b>Dịch sang tiếng Việt</b>.</p><div class="example-terms"><span>register → thanh ghi</span><span>interrupt → ngắt</span><span>clock → xung nhịp</span></div></div>
+      <div id="translation-content" hidden>
+        <div class="section-label">VĂN BẢN GỐC <button id="copy-source" class="icon-button" aria-label="Sao chép văn bản gốc"><i data-icon="copy"></i></button></div>
+        <div id="translation-source"></div>
+        <div class="section-label result-label">TIẾNG VIỆT <button id="copy-result" class="icon-button" aria-label="Sao chép bản dịch" disabled><i data-icon="copy"></i></button></div>
+        <div id="translation-result" aria-live="polite"></div>
+        <div id="translation-status"></div>
+        <div class="translation-actions"><button id="retry-translation" class="secondary" hidden><i data-icon="translate"></i>Dịch đoạn đã chọn</button><button id="save-translated-vocab" class="secondary"><i data-icon="book"></i>Lưu vocab</button></div>
+      </div>
+      <div class="translation-footer"><label class="switch-label"><input id="auto-translate" type="checkbox"><span class="switch"></span>Tự động dịch khi bôi đen</label><p>Tên thanh ghi, mã lệnh và địa chỉ được giữ nguyên.</p></div>
+      </section>
+      <section id="chat-view" hidden>
+        <div class="chat-collapse-bar">
+          <button id="chat-toggle-history" class="chat-collapse-toggle" type="button" aria-expanded="true" aria-controls="chat-conversation-details"><i data-icon="down" aria-hidden="true"></i><span>Hội thoại</span></button>
+          <span id="chat-conversation-summary" class="chat-compact-summary" hidden></span>
+          <button id="chat-close" class="icon-button" aria-label="Đóng Chat AI"><i data-icon="close"></i></button>
+        </div>
+        <div id="chat-conversation-details">
+        <div class="chat-heading"><div><span class="eyebrow">GEMINI · TIẾNG VIỆT</span><h2>Trợ lý lập trình nhúng</h2></div></div>
+        <div class="chat-history-controls"><select id="chat-history" aria-label="Hội thoại đã lưu"><option value="">Cuộc trò chuyện mới</option></select><button id="chat-new" title="Cuộc trò chuyện mới">Mới</button><button id="chat-rename" title="Đổi tên hội thoại">Đổi tên</button><button id="chat-delete" title="Xóa hội thoại">Xóa</button></div>
+        </div>
+        <div id="chat-messages" aria-label="Tin nhắn Chat AI" role="log"></div>
+        <div class="chat-collapse-bar chat-options-bar">
+          <button id="chat-toggle-options" class="chat-collapse-toggle" type="button" aria-expanded="true" aria-controls="chat-suggestions chat-source-options"><i data-icon="down" aria-hidden="true"></i><span>Gợi ý &amp; nguồn</span></button>
+          <span id="chat-source-summary" class="chat-compact-summary" hidden></span>
+        </div>
+        <div id="chat-suggestions" aria-label="Gợi ý câu hỏi"></div>
+        <form id="chat-form">
+          <div id="chat-source-options">
+          <div class="chat-source-controls"><label>Phạm vi<select id="chat-scope"><option value="selection">Đoạn bôi đen / trang hiện tại</option><option value="page">Trang hiện tại</option><option value="search">Tìm trong tài liệu</option><option value="compare">Đối chiếu hai PDF</option></select></label><label>Nguồn<select id="chat-pane-source"><option value="focused">Khung đang đọc</option><option value="left">PDF bên trái</option><option value="right">PDF bên phải</option><option value="both">Cả hai PDF</option></select></label></div>
+          <div id="chat-source-preview"></div>
+          </div>
+          <textarea id="chat-input" rows="3" maxlength="8000" placeholder="Hỏi về đoạn đang đọc… Enter gửi · Shift+Enter xuống dòng" aria-label="Câu hỏi cho AI"></textarea>
+          <div class="chat-actions"><button id="chat-send" type="submit" class="primary">Gửi</button><button id="chat-stop" type="button" class="secondary" hidden>Dừng trả lời</button><button id="chat-retry" type="button" class="secondary" disabled>Thử lại</button></div>
+          <p id="chat-status" role="status"></p>
+        </form>
+      </section>
+    </aside>
+  </main>
+  <footer class="statusbar"><span id="reader-status"><span class="status-dot"></span>Sẵn sàng mở tài liệu</span><span>Bôi đen → Dịch <span class="footer-divider">|</span> Alt + ← / → để điều hướng</span></footer>
+  <div id="selection-tools" class="selection-tools" hidden><button id="selection-translate"><i data-icon="translate"></i>Dịch sang tiếng Việt</button><button id="selection-ai"><i data-icon="chip"></i>Hỏi AI</button><button id="selection-save"><i data-icon="book"></i>Lưu vocab</button><button id="selection-note"><i data-icon="highlight"></i>Đánh dấu / Ghi chú</button></div>
+  <div id="toast" role="status" hidden></div>
+  <dialog id="settings-dialog">
+    <form id="settings-form">
+      <div class="dialog-heading"><div><span class="eyebrow">CÁ NHÂN HÓA</span><h2>Cài đặt dịch</h2></div><button type="button" id="settings-close" class="icon-button" aria-label="Đóng cài đặt"><i data-icon="close"></i></button></div>
+      <p class="dialog-intro">Từ điển thuật ngữ nhúng dùng được ngay. Để dịch đoạn văn, chọn dịch vụ bên dưới.</p>
+      <label class="field">Dịch vụ dịch<select id="provider"><option value="gemini">Google Gemini</option><option value="ollama">Ollama · chạy trên máy này</option></select></label>
+      <div id="gemini-settings"><label class="field">API key<input id="api-key" type="password" autocomplete="off" placeholder="Nhập Gemini API key"></label><p class="field-hint" id="key-status">API key được mã hóa bằng tài khoản Windows của bạn.</p><button id="get-api-key" type="button" class="text-button">Lấy API key tại Google AI Studio ↗</button><label class="check-label"><input id="clear-key" type="checkbox">Xóa API key đã lưu</label></div>
+      <div id="ollama-settings" hidden><label class="field">Địa chỉ Ollama<input id="endpoint" type="url" value="http://127.0.0.1:11434"></label><p class="field-hint">Cần cài Ollama và tải model có khả năng dịch tiếng Việt trước.</p></div>
+      <label class="field">Tên model<input id="model" required placeholder="gemini-3.8-flash"></label>
+      <label class="field">Model Chat AI (Gemini)<input id="chat-model" placeholder="Để trống để dùng model đã cấu hình"></label>
+      <div class="chat-settings-limits"><label class="field">Ngữ cảnh PDF tối đa (ký tự)<input id="chat-context-limit" type="number" min="4000" max="64000" step="1000" value="24000"></label><label class="field">Đầu ra tối đa (token)<input id="chat-output-limit" type="number" min="512" max="8192" step="512" value="4096"></label></div>
+      <label class="check-label" style="margin-top:12px"><input id="auto-fallback" type="checkbox" checked>Tự dùng model Gemini dự phòng khi quá tải/hết hạn mức</label>
+      <label class="field">Cỡ chữ bản dịch<select id="translation-font"><option value="14">14 px</option><option value="16">16 px</option><option value="18">18 px</option><option value="20">20 px</option><option value="24">24 px</option></select></label>
+      <div class="settings-note"><i data-icon="chip"></i><p>Bản dịch và Chat AI ưu tiên nghĩa kỹ thuật nhúng. Gemini nhận đoạn dịch hoặc trích đoạn PDF và lịch sử chat trong giới hạn đã cấu hình. PDF và chỉ mục văn bản ở trên máy bạn. Chat AI luôn dùng Gemini API key đã lưu.</p></div>
+      <p id="settings-error" class="error-text" role="alert"></p>
+      <div class="dialog-actions"><button type="button" id="settings-cancel" class="secondary">Hủy</button><button type="submit" class="primary">Lưu cài đặt</button></div>
+    </form>
+  </dialog>
+  <dialog id="password-dialog"><form id="password-form"><h2>PDF được bảo vệ</h2><p id="password-message">Nhập mật khẩu để mở tài liệu.</p><label class="field">Mật khẩu<input id="pdf-password" type="password" required autocomplete="off"></label><div class="dialog-actions"><button type="button" id="password-cancel" class="secondary">Hủy</button><button class="primary" type="submit">Mở tài liệu</button></div></form></dialog>
+  <dialog id="annotation-dialog" aria-labelledby="annotation-heading"><form id="annotation-form">
+    <div class="dialog-heading"><div><span class="eyebrow">GHI NHỚ NGAY TẠI ĐOẠN VĂN</span><h2 id="annotation-heading">Đánh dấu và ghi chú</h2></div><button type="button" id="annotation-close" class="icon-button" aria-label="Đóng ghi chú"><i data-icon="close"></i></button></div>
+    <p id="annotation-source" class="annotation-source"></p><div id="annotation-text" class="annotation-excerpt"></div>
+    <label id="annotation-body-field" class="field" hidden>Nội dung hộp văn bản<textarea id="annotation-body" rows="4" maxlength="8000"></textarea></label>
+    <label id="annotation-graphic-field" class="field" hidden>Màu bút / chữ<input id="annotation-graphic-color" type="color" value="#e5484d"></label>
+    <fieldset class="annotation-colors"><legend>Màu đánh dấu</legend><label><input type="radio" name="annotation-color" value="yellow" checked><span class="color-swatch yellow"></span>Vàng</label><label><input type="radio" name="annotation-color" value="green"><span class="color-swatch green"></span>Xanh lá</label><label><input type="radio" name="annotation-color" value="blue"><span class="color-swatch blue"></span>Xanh dương</label><label><input type="radio" name="annotation-color" value="pink"><span class="color-swatch pink"></span>Hồng</label></fieldset>
+    <label class="field">Ghi chú<textarea id="annotation-note" rows="4" maxlength="8000" placeholder="Ví dụ: Chú ý bit này phải ghi 1 để xóa."></textarea></label><p class="field-hint">Có thể để trống ghi chú nếu chỉ muốn tô màu. Đánh dấu được lưu trên máy để xem lại.</p>
+    <p id="annotation-error" class="error-text" role="alert"></p><div class="dialog-actions"><button id="annotation-cancel" type="button" class="secondary">Hủy</button><button id="annotation-save" class="primary" type="submit">Lưu đánh dấu</button></div>
+  </form></dialog>
+  <dialog id="annotations-dialog" aria-labelledby="annotations-heading"><div class="dialog-heading"><div><span class="eyebrow">CÁC ĐOẠN ĐÃ ĐÁNH DẤU</span><h2 id="annotations-heading">Ghi chú của tôi <span id="annotations-count"></span></h2></div><button id="annotations-close" class="icon-button" aria-label="Đóng danh sách ghi chú"><i data-icon="close"></i></button></div><p class="dialog-intro">Nhấn ghi chú để quay về đoạn gốc. Bạn có thể sửa nội dung hoặc đổi màu bất cứ lúc nào.</p><label class="vocabulary-search"><i data-icon="search"></i><input id="annotations-filter" type="search" placeholder="Tìm đoạn văn, ghi chú hoặc tên PDF…" aria-label="Tìm ghi chú"></label><div id="annotations-list"></div></dialog>
+  <dialog id="vocabulary-dialog" aria-labelledby="vocabulary-heading">
+    <div class="dialog-heading"><div><span class="eyebrow">ÔN LẠI THUẬT NGỮ NHÚNG</span><h2 id="vocabulary-heading">Vocab của tôi <span id="vocabulary-count"></span></h2></div><button id="vocabulary-close" class="icon-button" aria-label="Đóng danh sách vocab"><i data-icon="close"></i></button></div>
+    <p class="dialog-intro">Lưu từ hoặc đoạn bôi đen để xem lại. Nhấn tên tài liệu để quay về trang nguồn.</p>
+    <label class="vocabulary-search"><i data-icon="search"></i><input id="vocabulary-filter" type="search" placeholder="Tìm từ, nghĩa tiếng Việt hoặc tên PDF…" aria-label="Tìm vocab"></label>
+    <div id="vocabulary-list"></div><p id="vocabulary-error" class="error-text" role="alert"></p>
+  </dialog>
+  <script type="module" src="/src/app.mjs"></script>
+  <dialog id="chat-title-dialog"><form id="chat-title-form"><h2>Đổi tên hội thoại</h2><label class="field">Tên<input id="chat-title" maxlength="120" required></label><div class="dialog-actions"><button id="chat-title-cancel" type="button" class="secondary">Hủy</button><button type="submit" class="primary">Lưu</button></div></form></dialog>
+</body>
+</html>
