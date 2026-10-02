@@ -1,0 +1,69 @@
+{
+  "version": "1.5.1",
+  "verifiedAt": "2026-10-02T21:45:47.8776501+07:00",
+  "artifact": "E:\\App_RM\\release\\RM-Reader-1.5.1.exe",
+  "bytes": 114737616,
+  "sha256": "83E52582BC5315D8E7D5E4ACCF841BA69F78F1A437AD6FDD8ECCB8059C41B0A4",
+  "panelSourceChecksPassed": 8,
+  "panelPackagedChecksPassed": 8,
+  "imageRegressionChecksPassed": 16,
+  "maximumSingleWidth": 1344,
+  "reports": {
+    "panelSource": {
+      "version": "1.5.1",
+      "checks": [
+        "Real mouse drag expands Chat AI beyond 550px to 1000px and displays a wide register table",
+        "Dragging to the limit keeps the PDF visible, avoids overflow and preserves chat answer/draft/source",
+        "Keyboard resize uses the expanded range and separator reports its live width",
+        "Opening attachments adapts the limit and closing it restores the preferred width",
+        "Window shrink and expansion fit the layout then recover the preferred width",
+        "Hiding the outline allows a still wider panel and reopening it keeps the layout inside the window",
+        "Expanded chat in comparison mode preserves usable widths for both PDFs, including an unequal split",
+        "Translation and chat share the resized width and the preference survives app restart"
+      ],
+      "errors": [],
+      "packaged": false,
+      "wideWidth": 1000,
+      "maximumSingleWidth": 1344
+    },
+    "panelPackaged": {
+      "version": "1.5.1",
+      "checks": [
+        "Real mouse drag expands Chat AI beyond 550px to 1000px and displays a wide register table",
+        "Dragging to the limit keeps the PDF visible, avoids overflow and preserves chat answer/draft/source",
+        "Keyboard resize uses the expanded range and separator reports its live width",
+        "Opening attachments adapts the limit and closing it restores the preferred width",
+        "Window shrink and expansion fit the layout then recover the preferred width",
+        "Hiding the outline allows a still wider panel and reopening it keeps the layout inside the window",
+        "Expanded chat in comparison mode preserves usable widths for both PDFs, including an unequal split",
+        "Translation and chat share the resized width and the preference survives app restart"
+      ],
+      "errors": [],
+      "packaged": true,
+      "wideWidth": 1000,
+      "maximumSingleWidth": 1344
+    },
+    "images": {
+      "checks": [
+        "Dragging a region of an image-only PDF creates a readable preview with page 2, zoom and no AI request",
+        "Image preview and Send remain visible with conversation and source controls collapsed",
+        "Send includes real cropped image bytes without outside margins, freezes page/region and stores media separately from history",
+        "A transient Windows history file lock is retried without losing the completed answer",
+        "Image citation returns to the exact PDF region and Back restores the reading position",
+        "Follow-up and Retry retain the original image rather than using the newly viewed page",
+        "An attached image can be removed before Send without making an AI request",
+        "Image-only conversations work without a PDF, open the image as source and keep it for follow-up",
+        "Clipboard paste and multiple attachments work, and a fourth image is rejected before sending",
+        "Three-image preview fits a narrow 280px chat panel while keeping Send accessible",
+        "Region selection in the comparison pane sends that pane image and correct source owner",
+        "Backend rejects forged attachment IDs and invalid image bytes",
+        "Rotated PDF crops preserve orientation and Escape cancels an unfinished selection",
+        "Image previews, original source and usable image history survive restart",
+        "Deleting a conversation removes image files no longer referenced by history",
+        "Explicitly enabling PDF context sends both the chosen text and image in one question"
+      ],
+      "errors": [],
+      "packaged": false
+    }
+  }
+}

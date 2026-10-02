@@ -1,7 +1,7 @@
 RM READER — ĐỌC PDF VÀ DỊCH TÀI LIỆU NHÚNG
 
 Mở app:
-  Chạy release\RM-Reader-1.5.0.exe.
+  Chạy release\RM-Reader-1.5.1.exe.
   Hoặc chạy release\win-unpacked\RM Reader.exe.
   Bản win-unpacked cần giữ nguyên toàn bộ thư mục đi kèm.
 
@@ -46,7 +46,7 @@ Nhấn “Hội thoại” phía trên và “Gợi ý & nguồn” phía dướ
 
 RM READER 1.5.0 — HỎI AI BẰNG HÌNH, SƠ ĐỒ VÀ BẢNG
 
-Đóng app cũ, chạy release\RM-Reader-1.5.0.exe hoặc Mo_RM_Reader.cmd.
+Đóng app cũ, chạy release\RM-Reader-1.5.1.exe hoặc Mo_RM_Reader.cmd.
 Kiểm tra v1.5.0 trên thanh tab.
 
 1. Mở PDF, nhấn Hỏi hình/bảng, kéo khoanh vùng cần hỏi.
@@ -68,3 +68,19 @@ Xem KET_QUA_KIEM_THU_1.5.0.json để biết kết quả cụ thể.
 Mã nguồn gốc:
 C:\Users\ADMIN\OneDrive\Tài liệu\ChatGPT\APP đọc RM
 Bản sao các tệp trước khi sửa: updates\1.5.0\original-source.
+
+RM READER 1.5.1 — KÉO RỘNG BẢNG CHAT AI / BẢN DỊCH
+
+Đóng app cũ, chạy release\RM-Reader-1.5.1.exe hoặc Mo_RM_Reader.cmd.
+Kiểm tra v1.5.1 trên thanh tab.
+
+Kéo vạch dọc ở mép trái bảng Chat AI / Bản dịch sang trái để mở rộng.
+Đã bỏ giới hạn cố định 550 px. Chiều rộng tối đa phụ thuộc cửa sổ và các bảng đang mở.
+Trên cửa sổ 1920 px, bảng có thể kéo đến khoảng 1344 px khi mục lục đang mở.
+Đóng mục lục để có thêm chỗ; phần đọc PDF vẫn còn một vùng tối thiểu.
+Trong Hai PDF, app điều chỉnh giới hạn theo tỷ lệ chia để mỗi khung vẫn còn chỗ hiển thị.
+
+App nhớ chiều rộng bạn chọn, kể cả sau khi mở lại.
+Thu nhỏ cửa sổ sẽ tự giới hạn cho vừa; mở rộng lại khôi phục chiều rộng ưu tiên nếu đủ chỗ.
+Dùng Tab chọn vạch chia và mũi tên trái/phải để thay đổi chiều rộng 20 px.
+Câu hỏi đang viết, câu trả lời, nguồn chat và các tùy chọn thu gọn vẫn được giữ khi kéo.

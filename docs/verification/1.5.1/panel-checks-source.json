@@ -1,0 +1,17 @@
+{
+  "version": "1.5.1",
+  "checks": [
+    "Real mouse drag expands Chat AI beyond 550px to 1000px and displays a wide register table",
+    "Dragging to the limit keeps the PDF visible, avoids overflow and preserves chat answer/draft/source",
+    "Keyboard resize uses the expanded range and separator reports its live width",
+    "Opening attachments adapts the limit and closing it restores the preferred width",
+    "Window shrink and expansion fit the layout then recover the preferred width",
+    "Hiding the outline allows a still wider panel and reopening it keeps the layout inside the window",
+    "Expanded chat in comparison mode preserves usable widths for both PDFs, including an unequal split",
+    "Translation and chat share the resized width and the preference survives app restart"
+  ],
+  "errors": [],
+  "packaged": false,
+  "wideWidth": 1000,
+  "maximumSingleWidth": 1344
+}

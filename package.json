@@ -1,6 +1,6 @@
 {
   "name": "rm-reader",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Đọc reference manual PDF và dịch thuật ngữ lập trình nhúng sang tiếng Việt",
   "type": "module",
   "main": "electron/main.cjs",

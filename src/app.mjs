@@ -768,11 +768,35 @@ $('auto-translate').onchange = async () => {
   try { await desktop.saveSettings({ ...preferences, autoTranslate: $('auto-translate').checked }); await refreshState(); }
   catch (error) { $('auto-translate').checked = preferences.autoTranslate; failure(error); }
 };
-const resizer = $('translation-resizer'); let resizeStart = null;
-resizer.onpointerdown = event => { resizeStart = { x: event.clientX, width: $('translation-panel').offsetWidth }; resizer.setPointerCapture(event.pointerId); event.preventDefault(); };
-resizer.onpointermove = event => { if (resizeStart) document.documentElement.style.setProperty('--translation-width', `${Math.min(550, Math.max(270, resizeStart.width + resizeStart.x - event.clientX))}px`); };
-resizer.onpointerup = () => { resizeStart = null; };
-resizer.onkeydown = event => { if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); const width = $('translation-panel').offsetWidth + (event.key === 'ArrowLeft' ? 20 : -20); document.documentElement.style.setProperty('--translation-width', `${Math.min(550, Math.max(270, width))}px`); } };
+const resizer = $('translation-resizer'),panelWidthKey='rm-reader.translation-width';let resizeStart=null;
+let preferredPanelWidth=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--translation-width'))||340;
+if(!secondary){try{const saved=Number(localStorage.getItem(panelWidthKey));if(saved>=270&&saved<=10000)preferredPanelWidth=saved;}catch{}}
+function maxTranslationWidth(){
+  const sideWidth=[$('outline-panel'),$('attachments-panel')].reduce((sum,panel)=>sum+(panel.hidden?0:panel.getBoundingClientRect().width),0);
+  const ratio=Math.max(.25,Math.min(.75,(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--compare-right'))||50)/100));
+  const pdfWidth=comparing?Math.ceil(Math.max(226/(1-ratio),220/ratio)):300;
+  return Math.max(270,Math.floor($('workspace').clientWidth-sideWidth-(parseFloat(getComputedStyle(resizer).width)||5)-pdfWidth));
+}
+function applyTranslationWidth(){
+  if(secondary)return;
+  const maximum=maxTranslationWidth(),width=Math.min(maximum,Math.max(270,preferredPanelWidth)),style=document.documentElement.style;
+  for(const [property,value] of [['--translation-max-width',maximum+'px'],['--translation-width',width+'px']])if(style.getPropertyValue(property)!==value)style.setProperty(property,value);
+  resizer.setAttribute('aria-valuemin','270');resizer.setAttribute('aria-valuemax',String(maximum));resizer.setAttribute('aria-valuenow',String(Math.round(width)));resizer.setAttribute('aria-valuetext',Math.round(width)+' pixel');
+}
+function setTranslationWidth(width){
+  preferredPanelWidth=Math.min(maxTranslationWidth(),Math.max(270,width));applyTranslationWidth();
+  if(!secondary)try{localStorage.setItem(panelWidthKey,String(preferredPanelWidth));}catch{}
+}
+resizer.onpointerdown=event=>{if(event.button!==0)return;resizeStart={x:event.clientX,width:$('translation-panel').offsetWidth};resizer.setPointerCapture(event.pointerId);event.preventDefault();};
+resizer.onpointermove=event=>{if(resizeStart)setTranslationWidth(resizeStart.width+resizeStart.x-event.clientX);};
+resizer.onpointerup=resizer.onpointercancel=resizer.onlostpointercapture=()=>{resizeStart=null;};
+resizer.onkeydown=event=>{if(['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();setTranslationWidth($('translation-panel').offsetWidth+(event.key==='ArrowLeft'?20:-20));}};
+if(!secondary){
+  const panelResizeObserver=new ResizeObserver(applyTranslationWidth);
+  for(const panel of [$('workspace'),$('outline-panel'),$('attachments-panel')])panelResizeObserver.observe(panel);
+  new MutationObserver(applyTranslationWidth).observe(document.body,{attributes:true,attributeFilter:['class']});
+  applyTranslationWidth();
+}
 
 document.addEventListener('keydown', event => {
   if (document.querySelector('dialog[open]')) return;
@@ -878,6 +902,7 @@ function resizeComparison(x) {
   const left = $('reader-area').getBoundingClientRect(), right = $('comparison-pane').getBoundingClientRect();
   const fraction = Math.max(.25, Math.min(.75, (x - left.left) / (right.right - left.left)));
   document.documentElement.style.setProperty('--compare-right', `${(1 - fraction) * 100}%`);
+  applyTranslationWidth();
 }
 compareResizer.onpointerdown = event => { compareDrag = true; compareResizer.setPointerCapture(event.pointerId); event.preventDefault(); };
 compareResizer.onpointermove = event => { if (compareDrag) resizeComparison(event.clientX); };

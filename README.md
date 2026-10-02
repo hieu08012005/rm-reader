@@ -4,7 +4,7 @@
 
 ## Mở ứng dụng
 
-Bản đóng gói được đặt trong `E:\App_RM\release`. Đóng phiên bản cũ rồi chạy `RM-Reader-1.5.0.exe`, hoặc `win-unpacked\RM Reader.exe`. Với bản `win-unpacked`, giữ nguyên toàn bộ thư mục đi kèm. Phiên bản hiện ở bên phải thanh tab. Biểu tượng EXE và logo dùng ảnh người dùng cung cấp. Bản 1.2.1 giảm khoảng trống quanh biểu tượng taskbar, giúp phần hình lớn hơn khoảng 25%; ảnh gốc vẫn được giữ nguyên.
+Bản đóng gói được đặt trong `E:\App_RM\release`. Đóng phiên bản cũ rồi chạy `RM-Reader-1.5.1.exe`, hoặc `win-unpacked\RM Reader.exe`. Với bản `win-unpacked`, giữ nguyên toàn bộ thư mục đi kèm. Phiên bản hiện ở bên phải thanh tab. Biểu tượng EXE và logo dùng ảnh người dùng cung cấp. Bản 1.2.1 giảm khoảng trống quanh biểu tượng taskbar, giúp phần hình lớn hơn khoảng 25%; ảnh gốc vẫn được giữ nguyên.
 
 ## Cách sử dụng
 
@@ -217,3 +217,8 @@ Tải tại [Release v1.5.0](https://github.com/hieu08012005/rm-reader/releases/
 
 Mã nguồn, lockfile, script build, icon, kiểm thử, tài liệu phiên bản và PDF demo đều được lưu trong repo. Hướng dẫn/báo cáo nằm trong `docs/`, ảnh kiểm tra bản 1.5.0 nằm trong `docs/verification/1.5.0/`, PDF demo nằm trong `examples/`.
 `node_modules`, cache, dữ liệu tài khoản, API key và lịch sử chat cá nhân là dữ liệu cục bộ. Cài lại phụ thuộc bằng `npm.cmd ci` rồi build theo hướng dẫn ở trên. GitHub cũng cung cấp Source code ZIP/TAR của release.
+## Kéo rộng bảng Bản dịch / Chat AI (1.5.1)
+
+Kéo vạch dọc ở mép trái bảng bên phải sang trái để mở rộng. Bảng có thể rộng hơn 550 px; giới hạn dựa trên chiều rộng cửa sổ và các bảng đang mở, dành khoảng 300 px cho PDF khi đọc một tài liệu. Khi Hai PDF đang mở, giới hạn dành đủ chỗ cho mỗi khung theo tỷ lệ hiện tại.
+
+App nhớ chiều rộng bạn đã chọn. Khi thu nhỏ cửa sổ hoặc mở thêm bảng bên trái, chiều rộng tự điều chỉnh để vừa cửa sổ; mở rộng cửa sổ lại sẽ khôi phục chiều rộng ưu tiên nếu đủ chỗ. Có thể chọn vạch bằng Tab rồi dùng mũi tên trái/phải để tăng/giảm 20 px.
