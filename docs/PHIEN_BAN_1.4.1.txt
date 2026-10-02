@@ -1,0 +1,20 @@
+RM READER 1.4.1 — THU GỌN GIAO DIỆN CHAT AI
+
+Đóng bản app đang mở, rồi chạy release\RM-Reader-1.4.1.exe.
+Hoặc dùng Mo_RM_Reader.cmd để mở bản win-unpacked đã cập nhật.
+Kiểm tra v1.4.1 trên thanh tab.
+
+Trong tab Chat AI:
+- Nhấn “Hội thoại” ở phía trên để thu gọn/mở lại tiêu đề và danh sách quản lý hội thoại.
+- Nhấn “Gợi ý & nguồn” phía trên ô nhập để thu gọn/mở lại gợi ý, phạm vi và nguồn PDF.
+- Thu gọn cả hai phần để dành thêm diện tích cho nội dung tin nhắn.
+- Khi thu gọn, tên hội thoại và nguồn PDF hiện trên một dòng nhỏ. Rê chuột lên để xem đầy đủ.
+- Thu gọn không ảnh hưởng ô nhập và các nút Gửi, Dừng trả lời, Thử lại, đóng Chat AI.
+- App nhớ lựa chọn thu gọn khi chuyển tab, đóng/mở bảng hoặc khởi động lại.
+- Thu gọn giữ câu hỏi đang viết, lựa chọn nguồn và vị trí đọc trong hội thoại.
+- Có thể dùng Tab để chọn nút, Enter hoặc Space để thu gọn/mở lại.
+
+Mã nguồn gốc đã cập nhật tại:
+C:\Users\ADMIN\OneDrive\Tài liệu\ChatGPT\APP đọc RM
+Bản sao các tệp mã nguồn trước khi sửa ở updates\1.4.1\original-source.
+Bản portable 1.4.0 cũ vẫn có trong release.

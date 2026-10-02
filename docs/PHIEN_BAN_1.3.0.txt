@@ -1,0 +1,35 @@
+RM READER 1.3.0 — TỆP ĐÍNH KÈM TRONG PDF
+
+Đóng app cũ rồi chạy release\RM-Reader-1.3.0.exe.
+Hoặc chạy Mo_RM_Reader.cmd để mở bản mới trong win-unpacked.
+Kiểm tra v1.3.0 ở góc phải thanh tab. Dữ liệu API key, vocab và ghi chú vẫn được giữ.
+
+Nhấn biểu tượng kẹp giấy cạnh nút Mục lục để mở Tệp đính kèm (Attachments).
+Bảng bên trái hiện tên file, loại file và mô tả; tìm nhanh bằng ô tìm tên/mô tả.
+App lấy file nhúng trong PDF và file gắn trên trang, kể cả trang chưa đọc.
+
+MỞ
+Nhấn tên file hoặc Mở.
+PDF đính kèm mở thành tab trong app; mở lại cùng file sẽ dùng tab đã có.
+Excel/Word/ảnh/văn bản mở bằng ứng dụng mặc định của Windows.
+Cần có ứng dụng hỗ trợ loại file đó trên máy. Có thể Lưu rồi mở thủ công.
+Nhấp đúp kẹp giấy gắn trực tiếp trên trang cũng mở file đính kèm.
+
+LƯU
+Nút Lưu cho phép chọn tên/vị trí để lấy bản sao đúng nội dung nhúng.
+Lưu tất cả lấy toàn bộ file của PDF đang chọn, dù đang lọc tìm kiếm.
+Chọn thư mục lưu. Tệp trùng tên hoặc đã tồn tại được thêm (1), (2)...
+App không tự ghi đè file có sẵn khi lưu hàng loạt và không sửa PDF nguồn.
+
+HAI PDF
+Bảng đính kèm dùng tài liệu của khung vừa tương tác.
+Nhấn kẹp giấy ở bên phải để xem attachment của PDF bên phải.
+PDF đính kèm mở trong đúng khung đã chọn; khung còn lại giữ trang/zoom.
+
+Nhấn kẹp giấy lần nữa hoặc × để đóng bảng và quay lại Mục lục.
+PDF không có attachment được thông báo rõ ràng.
+File thực thi/script/shortcut hỗ trợ Lưu thay vì chạy trực tiếp.
+Giới hạn 512 MB mỗi tệp, tổng 1 GB và 1.000 tệp mỗi lần Lưu tất cả.
+Chưa có thêm/xóa attachment trong PDF gốc.
+
+Các công cụ tô màu, vẽ, tẩy, text box, dịch, vocab và logo lớn vẫn được giữ.

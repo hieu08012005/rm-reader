@@ -1,0 +1,45 @@
+{
+  "version": "1.0.2",
+  "coreTests": 18,
+  "packagedAppChecks": 23,
+  "checks": [
+    "App boots and displays Vietnamese interface",
+    "400-page PDF renders selectable text and nested outline",
+    "Blue internal link navigates to page 300",
+    "Back restores exact origin scroll and zoom",
+    "Named destination and three-level mouse/toolbar history work",
+    "Outline jumps to destination and Back returns",
+    "Dragging across blue linked text selects text without following link",
+    "Floating selection toolbar saves vocab before translation",
+    "Real mouse text selection translates embedded term offline",
+    "Selected vocab stores Vietnamese meaning and can be searched",
+    "Missing API key produces useful error while PDF stays readable",
+    "Provider response works and stale translation cannot overwrite new selection",
+    "PDF search highlights results, navigates and records history",
+    "Reopening PDF restores page 120, scroll offset and zoom",
+    "Windows app-command Back routes to PDF position history",
+    "Multi-file picker opens tabs and duplicate file reuses existing tab",
+    "Each tab preserves independent scroll, zoom and Back/Forward history",
+    "Start tab, keyboard tab switching and closing active tab work",
+    "Saved vocab reopens its PDF source and Back restores the reading position",
+    "Translation from an inactive tab cannot overwrite the active PDF",
+    "Closing all PDFs releases their tabs and returns to Start",
+    "Vocab survives app restart, reopens a closed PDF and supports deletion",
+    "Automatic translation still offers floating Save vocab and saves its meaning"
+  ],
+  "rendererErrors": [],
+  "liveGemini": {
+    "passed": true,
+    "model": "gemini-3.5-flash-lite",
+    "identifiersPreserved": [
+      "S32K1xx",
+      "GPIOA",
+      "0x40020000"
+    ]
+  },
+  "icon": {
+    "source": "Designer (11).png",
+    "exeResourcesVerified": true,
+    "packagedPngMatchesOriginal": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "checks": [
+    "Dragging a region of an image-only PDF creates a readable preview with page 2, zoom and no AI request",
+    "Image preview and Send remain visible with conversation and source controls collapsed",
+    "Send includes real cropped image bytes without outside margins, freezes page/region and stores media separately from history",
+    "A transient Windows history file lock is retried without losing the completed answer",
+    "Image citation returns to the exact PDF region and Back restores the reading position",
+    "Follow-up and Retry retain the original image rather than using the newly viewed page",
+    "An attached image can be removed before Send without making an AI request",
+    "Image-only conversations work without a PDF, open the image as source and keep it for follow-up",
+    "Clipboard paste and multiple attachments work, and a fourth image is rejected before sending",
+    "Three-image preview fits a narrow 280px chat panel while keeping Send accessible",
+    "Region selection in the comparison pane sends that pane image and correct source owner",
+    "Backend rejects forged attachment IDs and invalid image bytes",
+    "Rotated PDF crops preserve orientation and Escape cancels an unfinished selection",
+    "Image previews, original source and usable image history survive restart",
+    "Deleting a conversation removes image files no longer referenced by history",
+    "Explicitly enabling PDF context sends both the chosen text and image in one question"
+  ],
+  "errors": [],
+  "packaged": true
+}

@@ -1,4 +1,5 @@
 const paths = {
+  image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 4 4 3-3 5 5"/>',
   attachment: '<path d="m8 13 7-7a3 3 0 0 1 4 4L9 20a5 5 0 0 1-7-7L13 2M5 16l10-10"/>',
   save: '<path d="M4 3h13l4 4v14H3V3zM7 3v6h10V3M7 21v-8h10v8"/>',
   pen: '<path d="m4 16 12-12 4 4L8 20l-5 1zM14 6l4 4M4 16l4 4"/>',

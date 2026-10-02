@@ -4,7 +4,7 @@
 
 ## Mở ứng dụng
 
-Bản đóng gói được đặt trong `E:\App_RM\release`. Đóng phiên bản cũ rồi chạy `RM-Reader-1.4.1.exe`, hoặc `win-unpacked\RM Reader.exe`. Với bản `win-unpacked`, giữ nguyên toàn bộ thư mục đi kèm. Phiên bản hiện ở bên phải thanh tab. Biểu tượng EXE và logo dùng ảnh người dùng cung cấp. Bản 1.2.1 giảm khoảng trống quanh biểu tượng taskbar, giúp phần hình lớn hơn khoảng 25%; ảnh gốc vẫn được giữ nguyên.
+Bản đóng gói được đặt trong `E:\App_RM\release`. Đóng phiên bản cũ rồi chạy `RM-Reader-1.5.0.exe`, hoặc `win-unpacked\RM Reader.exe`. Với bản `win-unpacked`, giữ nguyên toàn bộ thư mục đi kèm. Phiên bản hiện ở bên phải thanh tab. Biểu tượng EXE và logo dùng ảnh người dùng cung cấp. Bản 1.2.1 giảm khoảng trống quanh biểu tượng taskbar, giúp phần hình lớn hơn khoảng 25%; ảnh gốc vẫn được giữ nguyên.
 
 ## Cách sử dụng
 
@@ -79,9 +79,22 @@ Hỏi tiếp gửi các lượt hoàn chỉnh gần nhất trong ngân sách l�
 
 Chat AI dùng Gemini API key đã mã hóa, không yêu cầu nhập lại. Trong Cài đặt có **Model Chat AI** riêng (để trống để dùng model cấu hình), giới hạn văn bản PDF mặc định 24.000 ký tự (4.000–64.000), đầu ra mặc định 4.096 token (512–8.192). Tùy chọn model dự phòng áp dụng cho cả chat và dịch; chỉ chọn model được Google liệt kê và hiển thị model thực tế. Lỗi tạm thời thử lại tối đa một lần mỗi model; quota ngày/zero quota không thử lặp trên model đó. Dừng hủy HTTP; giới hạn chờ cả lượt 3 phút. Phản hồi một phần được giữ nếu dừng/mất mạng; Thử lại dùng câu hỏi và nguồn đã chốt. Nếu có usage metadata, hiện token đã dùng, không đoán quota còn lại.
 
-PDF, chỉ mục và hội thoại ở trên máy; Gemini nhận câu hỏi, trích đoạn và lịch sử đã giới hạn. API key chỉ giải mã ở backend, không gửi qua IPC/log/lưu chat. Nội dung PDF/attachment là dữ liệu tham khảo, không là chỉ thị. Chat bản đầu chỉ đọc PDF có lớp văn bản, chưa OCR/hình ảnh hoặc đọc nội dung Excel/Word attachment. PDF đính kèm được mở thành tab thì dùng chat như PDF thông thường.
+PDF, chỉ mục và hội thoại ở trên máy; Gemini nhận câu hỏi, trích đoạn, ảnh được chọn và lịch sử đã giới hạn. API key chỉ giải mã ở backend, không gửi qua IPC/log/lưu chat. Nội dung PDF/attachment là dữ liệu tham khảo, không là chỉ thị. Tìm trong tài liệu vẫn dùng lớp văn bản; hình/scan cần chủ động khoanh vùng để gửi ảnh. Chưa đọc trực tiếp nội dung Excel/Word attachment. PDF đính kèm được mở thành tab thì dùng chat như PDF thông thường.
 
 Giao thức Gemini dùng [API REST streamGenerateContent chính thức](https://ai.google.dev/api/generate-content).
+
+## Hỏi AI bằng hình, sơ đồ và bảng (1.5.0)
+
+- Nhấn **Hỏi hình/bảng** trên thanh công cụ PDF rồi kéo khoanh vùng trên một trang. App mở Chat AI, đặt sẵn câu hỏi “Giải thích hình/bảng này” và hiển thị ảnh xem trước. Hoạt động cả ở khung PDF bên phải và trang scan không có lớp văn bản. Esc hủy thao tác khoanh vùng.
+- Nhấn **Thêm ảnh** để chọn PNG/JPEG, hoặc dán ảnh từ clipboard vào ô nhập. Có thể hỏi chỉ bằng ảnh khi chưa mở PDF.
+- Nhấn ảnh xem trước để xem lớn, dùng **Phóng to 100%** khi cần đọc chữ nhỏ; **Bỏ ảnh** gỡ ảnh chưa gửi. Chỉ nhấn **Gửi** mới gọi Gemini. Có thể viết câu hỏi riêng; để trống câu hỏi với ảnh sẽ dùng “Giải thích hình/bảng này”.
+- Mỗi câu hỏi tối đa 3 ảnh PNG/JPEG, tệp gốc tối đa 12 MB. App tối ưu mỗi ảnh xuống tối đa 2 MB, cạnh dài tối đa 3072 px. Ảnh PDF được dựng lại từ trang gốc ở độ phân giải riêng, không phụ thuộc chất lượng canvas đang hiển thị hay các ghi chú phủ trên PDF.
+- Ảnh vùng PDF lưu tên tài liệu, trang vật lý, nhãn trang, tọa độ vùng và phần văn bản nằm trong vùng nếu có. Nhấn trích dẫn hoặc **Về vùng PDF nguồn** để quay lại vùng đó; Back trở lại chỗ đang đọc. Ảnh ngoài PDF mở ảnh gốc khi nhấn trích dẫn, không tạo trang PDF giả.
+- Mặc định, câu hỏi có ảnh chỉ gửi ảnh đã chọn và văn bản trong vùng ảnh. Bật **Kèm văn bản PDF theo phạm vi đã chọn** để thêm nguồn văn bản theo các tùy chọn Phạm vi/Nguồn. Cuộn hoặc đổi trang sau khi chọn không làm đổi ảnh đã chốt.
+- Ảnh đã gửi lưu riêng trong thư mục dữ liệu app, có ảnh thu nhỏ trong lịch sử và còn sau khi khởi động lại. Hỏi tiếp dùng ảnh trong các lượt hoàn chỉnh gần nhất; lịch sử ảnh giới hạn tối đa 3 ảnh/6 MB, ngoài ảnh của câu hỏi mới. **Thử lại** dùng đúng ảnh đã gửi; **Dùng lại ảnh** đính kèm ảnh cũ vào câu hỏi mới khi cần. Xóa hội thoại xóa ảnh không còn được hội thoại nào tham chiếu.
+- App kiểm tra ảnh nguồn còn nguyên trước khi gửi lại; PDF đã đổi/di chuyển vẫn được đánh dấu nguồn cũ. Không tự gửi toàn bộ trang hoặc mọi hình trong tài liệu. Khi chữ/đường nối không rõ, AI được yêu cầu nêu phần chưa đọc được và đề nghị chọn lại vùng rõ hơn.
+
+Gửi ảnh bằng `inlineData` trong cùng yêu cầu streaming theo [tài liệu Gemini GenerateContent](https://ai.google.dev/api/generate-content); không dùng Files API hoặc dịch vụ OCR riêng.
 
 ## Thu gọn Chat AI (1.4.1)
 
@@ -166,6 +179,8 @@ npm.cmd run test:attachments
 npm.cmd run test:attachments:packaged
 npm.cmd run test:chat
 npm.cmd run test:chat:packaged
+npm.cmd run test:chat-images
+npm.cmd run test:chat-images:packaged
 ```
 
 - Kiểm thử lõi: lịch sử điều hướng, thuật ngữ kỹ thuật, chuẩn hóa văn bản, giữ nguyên định danh, cấu hình dịch, giao thức Gemini/Ollama và lỗi dịch vụ.
@@ -189,3 +204,16 @@ npm.cmd run test:chat:packaged
 - `electron/attachments.cjs`: trích xuất, mở bằng ứng dụng Windows, lưu bản sao và tránh trùng tên khi lưu hàng loạt.
 
 Tài liệu API: [PDF.js](https://mozilla.github.io/pdf.js/), [Electron app-command](https://www.electronjs.org/docs/latest/api/browser-window#event-app-command-windows-linux), [Gemini generateContent](https://ai.google.dev/api/generate-content), [Ollama chat](https://docs.ollama.com/api/chat).
+
+
+## Tải bản đã đóng gói trên GitHub
+
+Repo riêng tư: https://github.com/hieu08012005/rm-reader (cần đăng nhập tài khoản có quyền truy cập).
+
+Tải tại [Release v1.5.0](https://github.com/hieu08012005/rm-reader/releases/tag/v1.5.0):
+- `RM-Reader-1.5.0.exe`: bản portable, mở trực tiếp trên Windows.
+- `RM-Reader-1.5.0-Windows.zip`: toàn bộ thư mục bản chạy Windows; giải nén và mở `RM Reader.exe`, giữ nguyên các tệp đi kèm.
+- `SHA256SUMS.txt`: mã kiểm tra các tệp phát hành.
+
+Mã nguồn, lockfile, script build, icon, kiểm thử, tài liệu phiên bản và PDF demo đều được lưu trong repo. Hướng dẫn/báo cáo nằm trong `docs/`, ảnh kiểm tra bản 1.5.0 nằm trong `docs/verification/1.5.0/`, PDF demo nằm trong `examples/`.
+`node_modules`, cache, dữ liệu tài khoản, API key và lịch sử chat cá nhân là dữ liệu cục bộ. Cài lại phụ thuộc bằng `npm.cmd ci` rồi build theo hướng dẫn ở trên. GitHub cũng cung cấp Source code ZIP/TAR của release.

@@ -1,0 +1,54 @@
+{
+  "version": "1.4.1",
+  "verifiedAt": "2026-10-02T19:35:37.9925577+07:00",
+  "artifact": "E:\\App_RM\\release\\RM-Reader-1.4.1.exe",
+  "bytes": 114732375,
+  "sha256": "C28A93102A46778ACB3C3873D2A447CA1A5A31C94304C8B4102BF61A8228BC5A",
+  "coreTestsPassed": 43,
+  "chatChecksPassed": 18,
+  "layoutChecksPassed": 7,
+  "layoutTestEnvironment": "packaged",
+  "chatSpaceAddedPx": 269,
+  "reports": {
+    "chat": {
+      "checks": [
+        "Selection opens Chat AI with exact document/page/anchor and makes no API request until Send",
+        "Gemini uses saved encrypted key in backend, technical system instructions and only selected PDF text",
+        "Streaming answer supports tables, C code/copy, token usage and rejects invented citation/HTML",
+        "Translation and Chat tabs retain content and follow-up sends complete previous turns",
+        "Local indexing finds a unique register parameter on a different page in a long manual",
+        "Verified citation jumps to its physical page/anchor, highlights source and mouse Back restores reading position",
+        "Changing PDFs during a response never changes the sent source or mixes the destination conversation",
+        "Internal PDF jumps after a cross-document citation retain their normal Back order",
+        "A citation into another PDF activates its tab and Back returns to the previous PDF",
+        "Stop cancels the streaming HTTP request and saves the partial answer",
+        "Retry reuses the frozen question/sources without duplicate user turns",
+        "Sending an identical question again preserves both turns instead of treating it as Retry",
+        "Exhausted quota displays an actionable error without endless retry",
+        "Comparison searches both panes and attaches separately identified manual/datasheet passages",
+        "Conversation questions, answers, citations and renamed title survive app restart",
+        "Local chat storage never includes key and existing Windows encryption remains intact",
+        "Changed source PDFs are marked stale and citation navigation refuses the new content",
+        "Saved conversation can be explicitly selected and deleted"
+      ],
+      "errors": [],
+      "packaged": false
+    },
+    "layout": {
+      "version": "1.4.1",
+      "checks": [
+        "Independent collapse controls preserve draft/source and add 269px of chat space",
+        "Sending and rendering an answer retain collapsed state and update compact conversation title",
+        "Expanding retains source choices and preserves bottom or earlier reading position",
+        "Collapse controls work with keyboard and announce expanded state",
+        "Tab switching and closing/reopening the assistant retain layout and messages",
+        "Compact layout fits a 280px panel without horizontal overflow",
+        "Saved collapse preferences survive app restart and both sections can reopen"
+      ],
+      "errors": [],
+      "fullHeight": 218,
+      "compactHeight": 487,
+      "packaged": true
+    }
+  }
+}

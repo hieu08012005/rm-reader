@@ -1,0 +1,8 @@
+{
+  "Version": "1.0.1",
+  "CoreTestsPassed": 18,
+  "PdfAppTestsPassed": 13,
+  "LiveGeminiThroughAppPassed": true,
+  "LiveGeminiInPackagedExePassed": true,
+  "SecretsEmbedded": false
+}

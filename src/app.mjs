@@ -9,6 +9,7 @@ import { AnnotationManager } from './annotations.mjs';
 import { MarkupTools } from './markup.mjs';
 import { AttachmentManager } from './attachments.mjs';
 import { ChatManager } from './chat.mjs';
+import { capturePdfRegion } from './pdf-image.mjs';
 
 globalThis.pdfjsLib = pdfjs;
 pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
@@ -129,7 +130,13 @@ async function annotationsChanged() {
   else await refreshState();
 }
 const markup = new MarkupTools({desktop, viewer:pdfViewer,container,annotations,getDocument:()=>documentInfo,capturePosition,
-  onSaved:annotationsChanged,onError:failure,onFocus:()=>focusPane(secondary?'right':'left')});
+  onSaved:annotationsChanged,onError:failure,onFocus:()=>focusPane(secondary?'right':'left'),onCapture:async region=>{
+    const context=chatContext();if(context.info?.id!==region.documentId||!context.pdf)throw new Error('PDF đã đổi. Hãy khoanh lại vùng ảnh.');
+    const recipient=secondary?window.parent.rmReader:window.rmReader;recipient.beginAIImageCapture();
+    $('markup-status').textContent='Đang tạo ảnh xem trước…';
+    try{const image=await capturePdfRegion(context,region);if(secondary)await window.parent.rmReader.askAIImage(image);else await chat.addPdfImage(image);}
+    finally{$('markup-status').textContent='';recipient.endAIImageCapture();}
+  }});
 eventBus.on('pagerendered', ({ pageNumber }) => annotations.paintPage(pageNumber));
 eventBus.on('textlayerrendered', ({ pageNumber }) => annotations.paintPage(pageNumber));
 
@@ -911,7 +918,9 @@ async function goToChatSource(source){
 async function restoreCitationOrigin(target){const reader=target.owner==='right'&&comparing?rightReader():window.rmReader;const info=reader.document?.id===target.info.id?null:await desktop.reopenPdf(target.info.id);if(info&&info.id!==target.info.id)throw new Error('PDF nguồn đã thay đổi.');if(info)await reader.openDocument(info);focusPane(target.owner==='right'&&comparing?'right':'left');await reader.restoreChatPosition(target.position);}
 function jumpChatSource(conversationId,source){const task=performChatJump(conversationId,source);citationJump=task;task.finally(()=>{if(citationJump===task)citationJump=null;}).catch(()=>{});return task;}
 async function performChatJump(conversationId,source){
-  const origin=getChatContexts().find(c=>c.focused);const {document:info,source:verified}=await desktop.openChatSource({conversationId,sourceId:source.id});
+  const origin=getChatContexts().find(c=>c.focused);const result=await desktop.openChatSource({conversationId,sourceId:source.id});
+  if(result.image){chat.showImage(result.image);return;}
+  const {document:info,source:verified}=result;
   const existing=getChatContexts().find(c=>c.info?.id===info.id),owner=existing?.owner||(source.owner==='right'&&comparing?'right':'left');const reader=owner==='right'?rightReader():window.rmReader;
   if(reader.document?.id!==info.id)await reader.openDocument(info);else desktop.releasePdf(info.token).catch(failure);
   focusPane(owner);await reader.goToChatSource(verified);
@@ -920,7 +929,9 @@ async function performChatJump(conversationId,source){
 }
 window.rmReader = { openDocument, refreshState, navigate, goToMark, focusPane, jumpToAnnotation,chatContext,goToChatSource,clearCitationForward,
   restoreChatPosition:position=>queueNavigation(()=>restorePosition(position)),
-  chatChanged:()=>chat?.changed(),askAI:draft=>chat?.open(draft),
+  chatChanged:()=>chat?.changed(),askAI:draft=>chat?.open(draft),askAIImage:image=>chat?.addPdfImage(image),
+  beginAIImageCapture:()=>{if(chat.busy)throw new Error('Hãy đợi AI trả lời xong hoặc dừng trước khi khoanh ảnh.');chat.imageJobs++;chat.renderDrafts();},
+  endAIImageCapture:()=>{chat.imageJobs--;chat.renderDrafts();},
   get document() { return documentInfo; },
   get attachmentSource() { return attachments.localSource; },
   showAttachmentsFromPane: source=>{const opened=!$('attachments-panel').hidden && attachments.source===source;focusPane('right');if(opened)setAttachmentsVisible(false);else showAttachments(source);},

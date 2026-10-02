@@ -1,0 +1,24 @@
+RM READER 1.5.0 — HỎI AI BẰNG HÌNH, SƠ ĐỒ VÀ BẢNG
+
+Đóng app cũ, chạy release\RM-Reader-1.5.0.exe hoặc Mo_RM_Reader.cmd.
+Kiểm tra v1.5.0 trên thanh tab.
+
+1. Mở PDF, nhấn Hỏi hình/bảng, kéo khoanh vùng cần hỏi.
+2. Kiểm tra ảnh xem trước. Nhấn ảnh để xem lớn / Phóng to 100%.
+3. Nhập câu hỏi hoặc dùng Giải thích hình/bảng này, rồi nhấn Gửi.
+4. Nhấn trích dẫn để về đúng vùng PDF nguồn; Back quay lại vị trí đang đọc.
+
+Hoạt động với clock tree, timing diagram, bảng thanh ghi và PDF scan.
+Thêm ảnh / dán PNG hoặc JPEG vào ô chat cũng được, kể cả khi chưa mở PDF.
+Tối đa 3 ảnh mỗi câu hỏi, 12 MB cho tệp gốc; app tối ưu trước khi gửi.
+Ảnh chỉ được gửi Gemini khi nhấn Gửi; có thể bỏ ảnh trước khi gửi.
+Tùy chọn Kèm văn bản PDF theo phạm vi đã chọn bổ sung văn bản khi bạn cần.
+Ảnh lưu cùng lịch sử trên máy; hỏi tiếp / Thử lại giữ ảnh nguồn, Dùng lại ảnh gắn lại vào câu hỏi mới.
+
+Đã kiểm tra Gemini thực đọc mã chỉ xuất hiện trong ảnh và trả về trích dẫn ảnh hợp lệ.
+Đã kiểm tra chat văn bản, đánh dấu và các luồng ảnh trên bản nguồn/bản đóng gói.
+Xem KET_QUA_KIEM_THU_1.5.0.json để biết kết quả cụ thể.
+
+Mã nguồn gốc:
+C:\Users\ADMIN\OneDrive\Tài liệu\ChatGPT\APP đọc RM
+Bản sao các tệp trước khi sửa: updates\1.5.0\original-source.

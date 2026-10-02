@@ -1,10 +1,11 @@
 // Build Markdown with DOM nodes only: model/PDF HTML, links and scripts are never executed.
+import { sourceLabel } from './core/chat-images.mjs';
 export function renderAnswer(container,text,sources,onSource){
   container.replaceChildren();const byId=new Map((sources||[]).map(s=>[s.id,s]));
   const inline=(node,value)=>{
     const pattern=/\[\s*SRC\s*:\s*([\w-]+)\s*\]|`([^`\n]+)`|\*\*([^*]+)\*\*/gi;let last=0,match;
     while((match=pattern.exec(value))){node.append(document.createTextNode(value.slice(last,match.index)));let part;
-      if(match[1]){const source=byId.get(match[1]);part=document.createElement(source?'button':'span');part.className=source?'chat-citation':'chat-invalid-citation';part.textContent=source?`[${source.documentName} · Trang ${source.page}${source.label&&source.label!==String(source.page)?' · Nhãn '+source.label:''}]`:'[Nguồn chưa được cung cấp]';if(source){part.title=source.text.slice(0,600);part.onclick=()=>onSource(source);}}
+      if(match[1]){const source=byId.get(match[1]);part=document.createElement(source?'button':'span');part.className=source?'chat-citation':'chat-invalid-citation';part.textContent=source?`[${sourceLabel(source)}${source.documentId&&source.label&&source.label!==String(source.page)?' · Nhãn '+source.label:''}]`:'[Nguồn chưa được cung cấp]';if(source){part.title=source.text.slice(0,600);part.onclick=()=>onSource(source);}}
       else{part=document.createElement(match[2]?'code':'strong');part.textContent=match[2]||match[3];}node.append(part);last=pattern.lastIndex;
     }node.append(document.createTextNode(value.slice(last)));
   };

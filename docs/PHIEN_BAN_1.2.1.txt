@@ -1,0 +1,13 @@
+RM READER 1.2.1 — LOGO TASKBAR LỚN HƠN
+
+Đóng bản đang chạy rồi mở release\RM-Reader-1.2.1.exe.
+Hoặc chạy Mo_RM_Reader.cmd để dùng bản mới trong win-unpacked.
+Kiểm tra v1.2.1 ở góc phải thanh tab.
+
+Logo được tăng khoảng 25% bằng cách giảm phần trống của khung icon.
+Thiết kế và màu sắc logo gốc được giữ nguyên.
+Icon EXE và icon cửa sổ/taskbar đều dùng phiên bản này.
+Nếu Windows vẫn hiện biểu tượng đã ghim cũ: bỏ ghim app cũ, mở bản mới rồi ghim lại.
+
+Các chức năng của 1.2.0 và dữ liệu API key/vocab/ghi chú vẫn được giữ.
+Xem PHIEN_BAN_1.2.0.txt để dùng tô màu, vẽ, tẩy và text box.

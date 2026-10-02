@@ -1,0 +1,23 @@
+{
+  "status": "complete",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "promptTokenCount": 1805,
+    "candidatesTokenCount": 329,
+    "totalTokenCount": 2134,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 724
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1081
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "recognizedImageOnlyCode": true,
+  "citationValid": true,
+  "error": null
+}

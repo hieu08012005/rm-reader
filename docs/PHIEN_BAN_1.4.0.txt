@@ -1,0 +1,51 @@
+RM READER 1.4.0 — CHAT AI / TRỢ LÝ LẬP TRÌNH NHÚNG
+
+MỞ BẢN MỚI
+Đóng app cũ rồi chạy E:\App_RM\release\RM-Reader-1.4.0.exe.
+Hoặc dùng shortcut/nút khởi động hiện có tới release\win-unpacked\RM Reader.exe.
+Kiểm tra v1.4.0 ở bên phải thanh tab. Giữ nguyên thư mục win-unpacked khi dùng bản này.
+
+HỎI TỪ ĐOẠN PDF
+1. Bôi đen mô tả thanh ghi/bit → Hỏi AI.
+2. Bảng bên phải chuyển sang Chat AI; xem tên PDF, trang và phạm vi trên ô nhập.
+3. Viết câu hỏi rồi Gửi, hoặc chọn gợi ý như Giải thích từng bit / Cho ví dụ C.
+4. Enter gửi; Shift+Enter xuống dòng. Dừng trả lời hủy yêu cầu; Thử lại dùng nguồn của câu hỏi trước.
+5. Nhấn nguồn [tên PDF · Trang N] để quay về trang/vùng được cung cấp. Back trên chuột quay về vị trí trước đó, kể cả PDF khác.
+
+PHẠM VI
+- Đoạn bôi đen / trang hiện tại: ưu tiên đoạn chọn; không có thì dùng trang đang đọc.
+- Trang hiện tại: văn bản của trang vật lý PDF.
+- Tìm trong tài liệu: lập chỉ mục cục bộ và tìm trích đoạn liên quan. Có thể tiếp tục đọc khi lập chỉ mục. Nêu tên thanh ghi/bit hoặc thuật ngữ tiếng Anh giúp tìm chính xác.
+- Đối chiếu hai PDF: mở Hai PDF, chọn manual và datasheet; chat lấy nguồn phù hợp từ cả hai, ghi riêng tên file/trang.
+- Chọn nguồn khung đang đọc, trái, phải hoặc cả hai. Phạm vi đối chiếu luôn dùng cả hai.
+
+Nguồn được chốt lúc bấm Gửi. Cuộn/đổi PDF trong lúc AI trả lời không làm thay đổi nguồn đã gửi.
+Trong chế độ tìm, danh sách trang chính xác được ghi cùng câu hỏi sau khi tìm xong.
+Trang N là trang vật lý PDF; nhãn trang khác sẽ hiển thị thêm. Chỉ mã nguồn có trong dữ liệu gửi mới tạo liên kết.
+Mục Trích đoạn được cung cấp cho kiểm tra các nguồn; nếu AI không dẫn đúng, app thông báo thay vì tạo liên kết giả.
+
+HỘI THOẠI
+- Bản dịch và Chat AI là hai tab riêng, giữ nội dung khi chuyển qua lại.
+- Lịch sử lưu trên máy theo PDF/cặp PDF. Chọn hội thoại cũ trong danh sách phía trên để xem tiếp.
+- Mới tạo hội thoại mới; Đổi tên và Xóa quản lý lịch sử.
+- Đổi PDF không tự trộn hội thoại. Khi gửi với bộ tài liệu khác, app tạo cuộc trò chuyện riêng.
+- Nếu PDF nguồn đã sửa/di chuyển, nguồn cũ được đánh dấu và không nhảy vào nội dung mới.
+- Khi lịch sử gửi quá dài, chỉ các lượt hoàn chỉnh gần nhất được gửi, có thông báo; bản lưu vẫn giữ các lượt cũ.
+
+GEMINI VÀ CÀI ĐẶT
+App dùng API key Gemini đã mã hóa; không cần nhập lại key đã lưu.
+Cài đặt có Model Chat AI riêng: để trống dùng model đã cấu hình.
+Ngữ cảnh PDF mặc định 24.000 ký tự; đầu ra tối đa mặc định 4.096 token; có thể điều chỉnh.
+Nếu bật model dự phòng, app chọn model được Google liệt kê và hiển thị model thực tế.
+Kiểm thử kết nối thật đã trả lời bằng gemini-3.5-flash-lite khi model chính hết quota ngày.
+Lỗi key/mạng/quota/quá tải có thông báo. Retry tự động có giới hạn; không đoán quota còn lại.
+Nếu API trả usage metadata, mỗi câu trả lời hiển thị số token đã dùng. Mỗi lượt có giới hạn chờ 3 phút.
+
+GIỚI HẠN BẢN ĐẦU
+Chat đọc lớp văn bản PDF. Chưa OCR trang scan, đọc hình, hay phân tích Excel/Word attachment.
+PDF attachment mở thành tab có thể dùng Chat AI bình thường.
+Tìm kiếm là xếp hạng trích đoạn theo từ khóa trên máy, không bảo đảm tìm mọi thông tin trong tài liệu.
+Ví dụ C/C++ cần kiểm tra đúng MCU, SDK và môi trường; AI được hướng dẫn nêu giả định, không tạo địa chỉ/số bit/reset thiếu nguồn.
+PDF, chỉ mục và lịch sử lưu cục bộ. Gemini nhận câu hỏi, trích đoạn và lịch sử trong giới hạn; key chỉ xử lý ở backend.
+
+Các chức năng PDF, mục lục, liên kết, Back/Forward, tab, đối chiếu, dịch, vocab, tô màu, bút, tẩy, text box và attachment vẫn được giữ.

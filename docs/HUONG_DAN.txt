@@ -1,0 +1,70 @@
+RM READER — ĐỌC PDF VÀ DỊCH TÀI LIỆU NHÚNG
+
+Mở app:
+  Chạy release\RM-Reader-1.5.0.exe.
+  Hoặc chạy release\win-unpacked\RM Reader.exe.
+  Bản win-unpacked cần giữ nguyên toàn bộ thư mục đi kèm.
+
+1. Nhấn Mở PDF hoặc kéo thả file vào app.
+2. Chọn chương trong Mục lục hoặc nhấp liên kết màu xanh để nhảy tới nội dung.
+3. Nhấn Back trên chuột / Alt + mũi tên trái / nút Quay lại để về đúng vị trí và zoom.
+4. Bôi đen từ/đoạn văn → Dịch sang tiếng Việt → xem kết quả bên phải.
+5. Ctrl + F tìm trong PDF. Ctrl + O mở file.
+
+DỊCH
+Từ điển nhúng tích hợp dùng ngoại tuyến: register = thanh ghi, interrupt = ngắt,
+clock = xung nhịp, peripheral = ngoại vi…
+
+Để dịch cả đoạn:
+  - Cài đặt dịch → Google Gemini → nhập API key → Lưu cài đặt.
+  - Lấy API key tại https://aistudio.google.com/apikey.
+  - Chọn tên model được tài khoản của bạn hỗ trợ trong Cài đặt.
+  - Bản 1.0.1 tự thử lại khi Gemini bận; có thể tự dùng model dự phòng.
+  - Nếu model hiện tại chậm, có thể chọn gemini-3.5-flash-lite.
+  - Hoặc cài Ollama, tải model dịch tiếng Việt và chọn Ollama trong Cài đặt.
+
+App ưu tiên nghĩa lập trình nhúng và giữ nguyên tên thanh ghi, bit, mã lệnh,
+địa chỉ hex. PDF scan chưa có lớp văn bản chưa hỗ trợ bôi đen (chưa có OCR).
+
+Tai_lieu_demo.pdf là file demo 8 trang để thử mục lục, liên kết và thuật ngữ.
+File demo do dự án tạo, không phải reference manual của nhà sản xuất.
+
+Mã nguồn và hướng dẫn phát triển nằm trong thư mục dự án APP đọc RM.
+
+Tính năng mới của bản 1.2.0: tô màu liên tục, vẽ tự do có màu/độ dày, tẩy từng phần và text box trực tiếp trên PDF. Xem PHIEN_BAN_1.2.0.txt để sử dụng.
+Đóng app cũ, mở bản mới và kiểm tra v1.3.0 trên thanh tab.
+Bản 1.3.0 thêm bảng Tệp đính kèm: nhấn kẹp giấy để tìm, mở hoặc lưu file nhúng trong PDF. Xem PHIEN_BAN_1.3.0.txt.
+Bản 1.2.1 tăng logo taskbar khoảng 25%. Xem PHIEN_BAN_1.2.1.txt.
+
+CHAT AI (1.4.0)
+Bôi đen → Hỏi AI, hoặc mở tab Chat AI bên phải. Chọn đoạn/trang/tìm trong tài liệu/đối chiếu hai PDF, xem nguồn rồi Gửi. Nhấn nguồn để quay về PDF; Back trở lại vị trí trước đó. Hội thoại được lưu trên máy, có đổi tên/xóa. Dùng key Gemini đã mã hóa. Xem PHIEN_BAN_1.4.0.txt để biết chi tiết.
+
+THU GỌN CHAT AI (1.4.1)
+Nhấn “Hội thoại” phía trên và “Gợi ý & nguồn” phía dưới để thu gọn/mở lại từng phần, dành thêm diện tích cho tin nhắn. App nhớ lựa chọn khi mở lại. Xem PHIEN_BAN_1.4.1.txt.
+
+
+
+RM READER 1.5.0 — HỎI AI BẰNG HÌNH, SƠ ĐỒ VÀ BẢNG
+
+Đóng app cũ, chạy release\RM-Reader-1.5.0.exe hoặc Mo_RM_Reader.cmd.
+Kiểm tra v1.5.0 trên thanh tab.
+
+1. Mở PDF, nhấn Hỏi hình/bảng, kéo khoanh vùng cần hỏi.
+2. Kiểm tra ảnh xem trước. Nhấn ảnh để xem lớn / Phóng to 100%.
+3. Nhập câu hỏi hoặc dùng Giải thích hình/bảng này, rồi nhấn Gửi.
+4. Nhấn trích dẫn để về đúng vùng PDF nguồn; Back quay lại vị trí đang đọc.
+
+Hoạt động với clock tree, timing diagram, bảng thanh ghi và PDF scan.
+Thêm ảnh / dán PNG hoặc JPEG vào ô chat cũng được, kể cả khi chưa mở PDF.
+Tối đa 3 ảnh mỗi câu hỏi, 12 MB cho tệp gốc; app tối ưu trước khi gửi.
+Ảnh chỉ được gửi Gemini khi nhấn Gửi; có thể bỏ ảnh trước khi gửi.
+Tùy chọn Kèm văn bản PDF theo phạm vi đã chọn bổ sung văn bản khi bạn cần.
+Ảnh lưu cùng lịch sử trên máy; hỏi tiếp / Thử lại giữ ảnh nguồn, Dùng lại ảnh gắn lại vào câu hỏi mới.
+
+Đã kiểm tra Gemini thực đọc mã chỉ xuất hiện trong ảnh và trả về trích dẫn ảnh hợp lệ.
+Đã kiểm tra chat văn bản, đánh dấu và các luồng ảnh trên bản nguồn/bản đóng gói.
+Xem KET_QUA_KIEM_THU_1.5.0.json để biết kết quả cụ thể.
+
+Mã nguồn gốc:
+C:\Users\ADMIN\OneDrive\Tài liệu\ChatGPT\APP đọc RM
+Bản sao các tệp trước khi sửa: updates\1.5.0\original-source.

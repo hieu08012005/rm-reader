@@ -1,0 +1,124 @@
+{
+  "version": "1.5.0",
+  "verifiedAt": "2026-10-02T21:27:54.2744846+07:00",
+  "artifact": "E:\\App_RM\\release\\RM-Reader-1.5.0.exe",
+  "bytes": 114744281,
+  "sha256": "B484662B1F88C2B562C280778C98BC33D51B704980D196373F1F9E02BD1DDD3B",
+  "coreTestsPassed": 49,
+  "syntaxModulesChecked": 21,
+  "chatChecksPassed": 18,
+  "markupChecksPassed": 12,
+  "imageSourceChecksPassed": 16,
+  "imagePackagedChecksPassed": 16,
+  "reports": {
+    "chat": {
+      "checks": [
+        "Selection opens Chat AI with exact document/page/anchor and makes no API request until Send",
+        "Gemini uses saved encrypted key in backend, technical system instructions and only selected PDF text",
+        "Streaming answer supports tables, C code/copy, token usage and rejects invented citation/HTML",
+        "Translation and Chat tabs retain content and follow-up sends complete previous turns",
+        "Local indexing finds a unique register parameter on a different page in a long manual",
+        "Verified citation jumps to its physical page/anchor, highlights source and mouse Back restores reading position",
+        "Changing PDFs during a response never changes the sent source or mixes the destination conversation",
+        "Internal PDF jumps after a cross-document citation retain their normal Back order",
+        "A citation into another PDF activates its tab and Back returns to the previous PDF",
+        "Stop cancels the streaming HTTP request and saves the partial answer",
+        "Retry reuses the frozen question/sources without duplicate user turns",
+        "Sending an identical question again preserves both turns instead of treating it as Retry",
+        "Exhausted quota displays an actionable error without endless retry",
+        "Comparison searches both panes and attaches separately identified manual/datasheet passages",
+        "Conversation questions, answers, citations and renamed title survive app restart",
+        "Local chat storage never includes key and existing Windows encryption remains intact",
+        "Changed source PDFs are marked stale and citation navigation refuses the new content",
+        "Saved conversation can be explicitly selected and deleted"
+      ],
+      "errors": [],
+      "packaged": false
+    },
+    "markup": {
+      "checks": [
+        "Continuous highlighting saves each real text selection without translation or a dialog",
+        "Escape returns to normal selection and translation",
+        "Pen color and thickness are saved with a real freehand stroke",
+        "Eraser cuts the middle of an ink stroke and preserves both remaining sides",
+        "A small eraser removes only a selected highlight region while preserving nearby marks",
+        "Clicking Text box creates a multiline editable box at the clicked PDF position",
+        "Existing text boxes edit inline and save when focus leaves the box",
+        "PDF-coordinate ink and text boxes scale correctly after zoom",
+        "Each PDF pane has independent tools and drawings belong to the correct file",
+        "Text boxes appear in note search and jump to their original PDF location",
+        "Highlights, partially erased strokes and text boxes survive a full app restart",
+        "Text box delete removes its overlay and stored annotation"
+      ],
+      "errors": [],
+      "packaged": false
+    },
+    "imagesSource": {
+      "checks": [
+        "Dragging a region of an image-only PDF creates a readable preview with page 2, zoom and no AI request",
+        "Image preview and Send remain visible with conversation and source controls collapsed",
+        "Send includes real cropped image bytes without outside margins, freezes page/region and stores media separately from history",
+        "A transient Windows history file lock is retried without losing the completed answer",
+        "Image citation returns to the exact PDF region and Back restores the reading position",
+        "Follow-up and Retry retain the original image rather than using the newly viewed page",
+        "An attached image can be removed before Send without making an AI request",
+        "Image-only conversations work without a PDF, open the image as source and keep it for follow-up",
+        "Clipboard paste and multiple attachments work, and a fourth image is rejected before sending",
+        "Three-image preview fits a narrow 280px chat panel while keeping Send accessible",
+        "Region selection in the comparison pane sends that pane image and correct source owner",
+        "Backend rejects forged attachment IDs and invalid image bytes",
+        "Rotated PDF crops preserve orientation and Escape cancels an unfinished selection",
+        "Image previews, original source and usable image history survive restart",
+        "Deleting a conversation removes image files no longer referenced by history",
+        "Explicitly enabling PDF context sends both the chosen text and image in one question"
+      ],
+      "errors": [],
+      "packaged": false
+    },
+    "imagesPackaged": {
+      "checks": [
+        "Dragging a region of an image-only PDF creates a readable preview with page 2, zoom and no AI request",
+        "Image preview and Send remain visible with conversation and source controls collapsed",
+        "Send includes real cropped image bytes without outside margins, freezes page/region and stores media separately from history",
+        "A transient Windows history file lock is retried without losing the completed answer",
+        "Image citation returns to the exact PDF region and Back restores the reading position",
+        "Follow-up and Retry retain the original image rather than using the newly viewed page",
+        "An attached image can be removed before Send without making an AI request",
+        "Image-only conversations work without a PDF, open the image as source and keep it for follow-up",
+        "Clipboard paste and multiple attachments work, and a fourth image is rejected before sending",
+        "Three-image preview fits a narrow 280px chat panel while keeping Send accessible",
+        "Region selection in the comparison pane sends that pane image and correct source owner",
+        "Backend rejects forged attachment IDs and invalid image bytes",
+        "Rotated PDF crops preserve orientation and Escape cancels an unfinished selection",
+        "Image previews, original source and usable image history survive restart",
+        "Deleting a conversation removes image files no longer referenced by history",
+        "Explicitly enabling PDF context sends both the chosen text and image in one question"
+      ],
+      "errors": [],
+      "packaged": true
+    },
+    "liveVision": {
+      "status": "complete",
+      "model": "gemini-3.5-flash-lite",
+      "usage": {
+        "promptTokenCount": 1805,
+        "candidatesTokenCount": 329,
+        "totalTokenCount": 2134,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 724
+          },
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1081
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "recognizedImageOnlyCode": true,
+      "citationValid": true,
+      "error": null
+    }
+  }
+}

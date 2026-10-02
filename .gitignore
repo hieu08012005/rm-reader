@@ -13,3 +13,8 @@ test-results/
 *.pfx
 preferences.json
 chats.json
+
+chat-images/
+Local State
+*.zip
+*.7z

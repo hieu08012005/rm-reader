@@ -1,0 +1,18 @@
+{
+  "checks": [
+    "Continuous highlighting saves each real text selection without translation or a dialog",
+    "Escape returns to normal selection and translation",
+    "Pen color and thickness are saved with a real freehand stroke",
+    "Eraser cuts the middle of an ink stroke and preserves both remaining sides",
+    "A small eraser removes only a selected highlight region while preserving nearby marks",
+    "Clicking Text box creates a multiline editable box at the clicked PDF position",
+    "Existing text boxes edit inline and save when focus leaves the box",
+    "PDF-coordinate ink and text boxes scale correctly after zoom",
+    "Each PDF pane has independent tools and drawings belong to the correct file",
+    "Text boxes appear in note search and jump to their original PDF location",
+    "Highlights, partially erased strokes and text boxes survive a full app restart",
+    "Text box delete removes its overlay and stored annotation"
+  ],
+  "errors": [],
+  "packaged": false
+}

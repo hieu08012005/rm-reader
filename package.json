@@ -1,6 +1,6 @@
 {
   "name": "rm-reader",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Đọc reference manual PDF và dịch thuật ngữ lập trình nhúng sang tiếng Việt",
   "type": "module",
   "main": "electron/main.cjs",
@@ -22,7 +22,9 @@
     "test:attachments": "node tests/attachments-app.mjs",
     "test:attachments:packaged": "node tests/attachments-app.mjs --packaged",
     "test:chat": "node tests/chat-app.mjs",
-    "test:chat:packaged": "node tests/chat-app.mjs --packaged"
+    "test:chat:packaged": "node tests/chat-app.mjs --packaged",
+    "test:chat-images": "node tests/chat-images-app.mjs",
+    "test:chat-images:packaged": "node tests/chat-images-app.mjs --packaged"
   },
   "dependencies": {
     "pdfjs-dist": "6.3.289"

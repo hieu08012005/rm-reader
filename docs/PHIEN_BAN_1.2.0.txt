@@ -1,0 +1,43 @@
+RM READER 1.2.0 — TÔ MÀU, VẼ, TẨY VÀ TEXT BOX
+
+Đóng app cũ rồi mở release\RM-Reader-1.2.0.exe.
+Hoặc chạy Mo_RM_Reader.cmd để mở release\win-unpacked\RM Reader.exe.
+Kiểm tra v1.2.0 ở góc phải thanh tab.
+API key, vocab và ghi chú đã lưu tiếp tục dùng dữ liệu hiện có.
+
+Thanh công cụ nằm ngay trên trang PDF, gồm:
+
+1. TÔ MÀU
+Chọn Tô màu, chọn màu ở ô bên cạnh rồi bôi đen đoạn văn.
+Bôi đen vùng nào thì vùng đó tự tô và tự lưu; có thể tô liên tiếp.
+Về Chọn rồi nhấn biểu tượng ghi chú cạnh vùng tô để thêm ghi chú.
+
+2. VẼ
+Chọn Vẽ, chọn màu bút và độ dày nét (1, 2, 4, 8, 12).
+Giữ chuột trái và kéo trên trang để vẽ. Thả chuột để lưu nét.
+Nét vẽ giữ tọa độ trên PDF và thay đổi kích thước theo zoom.
+
+3. TẨY
+Chọn Tẩy và kích thước nhỏ/vừa/lớn. Khung vuông thể hiện vùng tẩy.
+Kéo qua vùng tô hoặc nét vẽ để xóa đúng phần đi qua.
+Các phần còn lại của vùng tô / nét vẽ được giữ nguyên.
+Tẩy tác động lên dấu do app tạo; nội dung PDF gốc giữ nguyên.
+
+4. TEXT BOX
+Chọn Text box, màu chữ và cỡ chữ; nhấn vào một chỗ trên trang.
+Nhập nội dung, Enter xuống dòng; kéo góc dưới bên phải để đổi kích thước.
+Ctrl+Enter, nút Lưu hoặc nhấn ra ngoài để lưu.
+Trong chế độ Chọn hoặc Text box, nhấn hộp đã có để sửa.
+Nút × trong trình sửa xóa hộp; Esc hủy phần đang nhập.
+
+5. CHỌN / DỊCH
+Nhấn Chọn hoặc Esc để trở về chọn văn bản, dịch và nhấp liên kết PDF.
+Chế độ tô / vẽ / tẩy tiếp tục hoạt động cho đến khi đổi công cụ.
+
+Trong Hai PDF, mỗi khung có bộ công cụ riêng và lưu vào đúng file của khung đó.
+Biểu tượng ghi chú trên thanh trên cùng mở danh sách vùng tô, nét vẽ và text box.
+Danh sách hỗ trợ tìm, sửa ghi chú/màu, quay về vị trí nguồn và xóa.
+
+Các dấu được lưu trong dữ liệu RM Reader trên máy, còn sau khi đóng/mở app.
+Chưa xuất các dấu vào PDF: file PDF gốc không bị sửa.
+Các chức năng đối chiếu, dịch giữ xuống dòng, kéo thả tab và vocab vẫn có.

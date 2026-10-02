@@ -1,0 +1,18 @@
+{
+  "checks": [
+    "App boots and displays Vietnamese interface",
+    "400-page PDF renders selectable text and nested outline",
+    "Blue internal link navigates to page 300",
+    "Back restores exact origin scroll and zoom",
+    "Named destination and three-level mouse/toolbar history work",
+    "Outline jumps to destination and Back returns",
+    "Dragging across blue linked text selects text without following link",
+    "Real mouse text selection translates embedded term offline",
+    "Missing API key produces useful error while PDF stays readable",
+    "Provider response works and stale translation cannot overwrite new selection",
+    "PDF search highlights results, navigates and records history",
+    "Reopening PDF restores page 120, scroll offset and zoom",
+    "Windows app-command Back routes to PDF position history"
+  ],
+  "errors": []
+}

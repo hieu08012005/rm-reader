@@ -1,0 +1,24 @@
+{
+  "checks": [
+    "Selection opens Chat AI with exact document/page/anchor and makes no API request until Send",
+    "Gemini uses saved encrypted key in backend, technical system instructions and only selected PDF text",
+    "Streaming answer supports tables, C code/copy, token usage and rejects invented citation/HTML",
+    "Translation and Chat tabs retain content and follow-up sends complete previous turns",
+    "Local indexing finds a unique register parameter on a different page in a long manual",
+    "Verified citation jumps to its physical page/anchor, highlights source and mouse Back restores reading position",
+    "Changing PDFs during a response never changes the sent source or mixes the destination conversation",
+    "Internal PDF jumps after a cross-document citation retain their normal Back order",
+    "A citation into another PDF activates its tab and Back returns to the previous PDF",
+    "Stop cancels the streaming HTTP request and saves the partial answer",
+    "Retry reuses the frozen question/sources without duplicate user turns",
+    "Sending an identical question again preserves both turns instead of treating it as Retry",
+    "Exhausted quota displays an actionable error without endless retry",
+    "Comparison searches both panes and attaches separately identified manual/datasheet passages",
+    "Conversation questions, answers, citations and renamed title survive app restart",
+    "Local chat storage never includes key and existing Windows encryption remains intact",
+    "Changed source PDFs are marked stale and citation navigation refuses the new content",
+    "Saved conversation can be explicitly selected and deleted"
+  ],
+  "errors": [],
+  "packaged": false
+}

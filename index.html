@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'self' rm-pdf: http://127.0.0.1:5173 ws://127.0.0.1:5173; object-src 'none'; base-uri 'self'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: rm-chat-image:; font-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'self' rm-pdf: http://127.0.0.1:5173 ws://127.0.0.1:5173; object-src 'none'; base-uri 'self'" />
   <title>RM Reader</title>
   <link rel="icon" type="image/png" href="/app-taskbar.png">
 </head>
@@ -64,6 +64,7 @@
       <div id="left-pane-heading" hidden><div class="pane-caption"><span>BÊN TRÁI</span><b id="left-pane-name">Chọn một PDF</b></div><div id="left-pane-controls"></div></div>
       <div id="markup-toolbar" role="toolbar" aria-label="Tô màu, vẽ và ghi chú PDF">
         <button id="tool-select" data-tool="select" aria-pressed="true" title="Chọn văn bản / Dịch · Esc"><i data-icon="select"></i><span>Chọn</span></button>
+        <button id="tool-ai-image" data-tool="ai-image" aria-pressed="false" title="Khoanh vùng → Giải thích hình/bảng này"><i data-icon="image"></i><span>Hỏi hình/bảng</span></button>
         <button id="tool-highlight" data-tool="highlight" aria-pressed="false" title="Bôi đen để tô màu liên tục"><i data-icon="highlight"></i><span>Tô màu</span></button>
         <select id="tool-highlight-color" aria-label="Màu tô"><option value="yellow">Vàng</option><option value="green">Xanh lá</option><option value="blue">Xanh dương</option><option value="pink">Hồng</option></select>
         <button id="tool-draw" data-tool="draw" aria-pressed="false" title="Vẽ tự do trên PDF"><i data-icon="pen"></i><span>Vẽ</span></button>
@@ -130,8 +131,11 @@
           <div class="chat-source-controls"><label>Phạm vi<select id="chat-scope"><option value="selection">Đoạn bôi đen / trang hiện tại</option><option value="page">Trang hiện tại</option><option value="search">Tìm trong tài liệu</option><option value="compare">Đối chiếu hai PDF</option></select></label><label>Nguồn<select id="chat-pane-source"><option value="focused">Khung đang đọc</option><option value="left">PDF bên trái</option><option value="right">PDF bên phải</option><option value="both">Cả hai PDF</option></select></label></div>
           <div id="chat-source-preview"></div>
           </div>
+          <div id="chat-image-drafts" hidden aria-label="Ảnh sẽ gửi cho AI"></div>
+          <label id="chat-image-context" class="check-label" hidden><input id="chat-include-pdf" type="checkbox">Kèm văn bản PDF theo phạm vi đã chọn</label>
           <textarea id="chat-input" rows="3" maxlength="8000" placeholder="Hỏi về đoạn đang đọc… Enter gửi · Shift+Enter xuống dòng" aria-label="Câu hỏi cho AI"></textarea>
-          <div class="chat-actions"><button id="chat-send" type="submit" class="primary">Gửi</button><button id="chat-stop" type="button" class="secondary" hidden>Dừng trả lời</button><button id="chat-retry" type="button" class="secondary" disabled>Thử lại</button></div>
+          <input id="chat-image-file" type="file" accept="image/png,image/jpeg" multiple hidden>
+          <div class="chat-actions"><button id="chat-send" type="submit" class="primary">Gửi</button><button id="chat-add-image" type="button" class="secondary" title="Đính kèm ảnh PNG/JPEG · có thể dán ảnh vào ô chat"><i data-icon="image"></i>Thêm ảnh</button><button id="chat-stop" type="button" class="secondary" hidden>Dừng trả lời</button><button id="chat-retry" type="button" class="secondary" disabled>Thử lại</button></div>
           <p id="chat-status" role="status"></p>
         </form>
       </section>
@@ -176,5 +180,6 @@
   </dialog>
   <script type="module" src="/src/app.mjs"></script>
   <dialog id="chat-title-dialog"><form id="chat-title-form"><h2>Đổi tên hội thoại</h2><label class="field">Tên<input id="chat-title" maxlength="120" required></label><div class="dialog-actions"><button id="chat-title-cancel" type="button" class="secondary">Hủy</button><button type="submit" class="primary">Lưu</button></div></form></dialog>
+  <dialog id="chat-image-dialog" aria-labelledby="chat-image-heading"><div class="dialog-heading"><h2 id="chat-image-heading">Xem ảnh</h2><button id="chat-image-close" type="button" class="icon-button" aria-label="Đóng ảnh"><i data-icon="close"></i></button></div><p id="chat-image-caption"></p><button id="chat-image-zoom" type="button" class="text-button" aria-pressed="false">Phóng to 100%</button><div id="chat-image-viewport"><img id="chat-image-large" alt="Ảnh đính kèm để hỏi AI"></div></dialog>
 </body>
 </html>

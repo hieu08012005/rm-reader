@@ -1,0 +1,99 @@
+{
+  "version": "1.3.0",
+  "verifiedAt": "2026-10-02T15:59:54.4744430+07:00",
+  "artifact": "E:\\App_RM\\release\\RM-Reader-1.3.0.exe",
+  "bytes": 114724666,
+  "sha256": "E6BA79544122461F38BA5281520EA234A9FCEC5946489F15B6C0519BE7DD8919",
+  "coreTestsPassed": 33,
+  "totalChecksPassed": 96,
+  "readerTestEnvironment": "packaged",
+  "markupTestEnvironment": "source",
+  "reports": {
+    "reader": {
+      "checks": [
+        "App boots and displays Vietnamese interface",
+        "400-page PDF renders selectable text and nested outline",
+        "Blue internal link navigates to page 300",
+        "Back restores exact origin scroll and zoom",
+        "Named destination and three-level mouse/toolbar history work",
+        "Outline jumps to destination and Back returns",
+        "Dragging across blue linked text selects text without following link",
+        "Floating selection toolbar saves vocab before translation",
+        "Real mouse text selection translates embedded term offline",
+        "Selected vocab stores Vietnamese meaning and can be searched",
+        "Missing API key produces useful error while PDF stays readable",
+        "Provider response works and stale translation cannot overwrite new selection",
+        "PDF search highlights results, navigates and records history",
+        "Reopening PDF restores page 120, scroll offset and zoom",
+        "Windows app-command Back routes to PDF position history",
+        "Multi-file picker opens tabs and duplicate file reuses existing tab",
+        "Each tab preserves independent scroll, zoom and Back/Forward history",
+        "Start tab, keyboard tab switching and closing active tab work",
+        "Saved vocab reopens its PDF source and Back restores the reading position",
+        "Translation from an inactive tab cannot overwrite the active PDF",
+        "Closing all PDFs releases their tabs and returns to Start",
+        "Vocab survives app restart, reopens a closed PDF and supports deletion",
+        "Automatic translation still offers floating Save vocab and saves its meaning"
+      ],
+      "errors": []
+    },
+    "compare": {
+      "checks": [
+        "Dragging PDF tabs changes their order while retaining the active document",
+        "Keyboard tab reordering supports the same stable document state",
+        "Two local PDF panes render distinct files through the existing safe IPC bridge",
+        "Right pane scrolling and zoom do not move or zoom the left PDF",
+        "Mouse Back follows the focused pane and keeps independent histories",
+        "Real text selection creates a colored mark and note at the exact source",
+        "Highlight stays aligned after zoom by restoring PDF coordinates",
+        "Inline note marker opens the editor and supports changing color and text",
+        "Selections in the right PDF save notes to that PDF and repaint both panes",
+        "Right pane translation uses the shared Vietnamese panel and saves the correct vocab source",
+        "Note search and click return to its marked line with Back preserving the reading position",
+        "Selected PDF lines retain their original line breaks in the Vietnamese panel source",
+        "Leaving and reopening comparison preserves the right PDF and its position",
+        "Notes and highlights survive restart and reopen a closed source PDF",
+        "Deleting a note removes its stored entry and PDF highlight"
+      ],
+      "errors": [],
+      "packaged": true
+    },
+    "markup": {
+      "checks": [
+        "Continuous highlighting saves each real text selection without translation or a dialog",
+        "Escape returns to normal selection and translation",
+        "Pen color and thickness are saved with a real freehand stroke",
+        "Eraser cuts the middle of an ink stroke and preserves both remaining sides",
+        "A small eraser removes only a selected highlight region while preserving nearby marks",
+        "Clicking Text box creates a multiline editable box at the clicked PDF position",
+        "Existing text boxes edit inline and save when focus leaves the box",
+        "PDF-coordinate ink and text boxes scale correctly after zoom",
+        "Each PDF pane has independent tools and drawings belong to the correct file",
+        "Text boxes appear in note search and jump to their original PDF location",
+        "Highlights, partially erased strokes and text boxes survive a full app restart",
+        "Text box delete removes its overlay and stored annotation"
+      ],
+      "errors": [],
+      "packaged": false
+    },
+    "attachments": {
+      "checks": [
+        "Sidebar lists named attachments and unvisited page-only attachments without duplicate page icons",
+        "Filename and Vietnamese description search find a spreadsheet",
+        "Excel attachment opens through Windows association with intact bytes in the app extraction folder",
+        "Save attachment writes the exact embedded workbook to the selected location",
+        "Canceling Save leaves the document and sidebar usable",
+        "Executable attachments support Save and cannot launch through the backend",
+        "Save all includes all files regardless of search, sanitizes embedded paths and preserves existing filenames",
+        "Embedded PDF opens inside a new app tab and the sidebar follows the active document",
+        "Opening the same embedded PDF reuses a stable extracted file and existing tab",
+        "Double-clicking a real paperclip annotation opens the embedded PDF through the same tab workflow",
+        "PDFs without attachments show a clear empty state",
+        "The shared attachment sidebar reads the focused right PDF without changing the left document",
+        "A right-pane PDF attachment opens into the right pane independently"
+      ],
+      "errors": [],
+      "packaged": true
+    }
+  }
+}

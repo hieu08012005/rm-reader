@@ -2,11 +2,11 @@ import { selectionRects, viewportRect, eraseAnnotations } from './core/annotatio
 import { normalizeSelection } from './core/glossary.mjs';
 import { icon } from './icons.mjs';
 const $ = id => document.getElementById(id);
-const hints = { select:'Chọn văn bản để dịch hoặc ghi chú', highlight:'Bôi đen → tự tô màu · Esc để thoát', draw:'Kéo bút trên trang · Esc để thoát', erase:'Kéo qua vùng tô / nét vẽ để tẩy · Esc để thoát', textbox:'Nhấn vào trang để đặt text box · Ctrl+Enter để lưu' };
+const hints = { select:'Chọn văn bản để dịch hoặc ghi chú', highlight:'Bôi đen → tự tô màu · Esc để thoát', draw:'Kéo bút trên trang · Esc để thoát', erase:'Kéo qua vùng tô / nét vẽ để tẩy · Esc để thoát', textbox:'Nhấn vào trang để đặt text box · Ctrl+Enter để lưu', 'ai-image':'Kéo khoanh hình/bảng trên một trang → xem trước · Esc để hủy' };
 
 export class MarkupTools {
-  constructor({ desktop, viewer, container, annotations, getDocument, capturePosition, onSaved, onError, onFocus }) {
-    Object.assign(this,{desktop,viewer,container,annotations,getDocument,capturePosition,onSaved,onError,onFocus});
+  constructor({ desktop, viewer, container, annotations, getDocument, capturePosition, onSaved, onError, onFocus, onCapture }) {
+    Object.assign(this,{desktop,viewer,container,annotations,getDocument,capturePosition,onSaved,onError,onFocus,onCapture});
     this.mode='select'; this.stroke=null; this.editor=null; this.pending=Promise.resolve();
     this.eraserCursor=document.createElement('div');this.eraserCursor.className='eraser-cursor';this.eraserCursor.hidden=true;document.body.append(this.eraserCursor);
     document.querySelectorAll('[data-tool]').forEach(button => button.onclick=()=>this.setMode(button.dataset.tool));
@@ -18,6 +18,7 @@ export class MarkupTools {
     container.addEventListener('lostpointercapture',()=>this.cancelStroke(),true);
     container.addEventListener('pointerleave',()=>{this.eraserCursor.hidden=true;});
     container.addEventListener('click',event=>{
+      if(this.suppressClick){this.suppressClick=false;event.preventDefault();event.stopImmediatePropagation();return;}
       if (this.mode!=='select' && !event.target.closest('.textbox-editor,.saved-textbox,.annotation-marker')) {event.preventDefault();event.stopImmediatePropagation();}
     },true);
     document.addEventListener('pointerup',()=>{ if(this.mode==='highlight') setTimeout(()=>this.highlight(),40); });
@@ -67,7 +68,8 @@ export class MarkupTools {
     this.save(async()=>{await this.desktop.saveAnnotation(draft);await this.onSaved();});
   }
   down(event) {
-    if(event.button!==0 || !['draw','erase','textbox'].includes(this.mode) || event.target.closest('.textbox-editor'))return;
+    this.suppressClick=false;
+    if(event.button!==0 || !['draw','erase','textbox','ai-image'].includes(this.mode) || event.target.closest('.textbox-editor'))return;
     const page=event.target.closest('.page'), view=page && this.viewer.getPageView(Number(page.dataset.pageNumber)-1);
     if(!view?.viewport || !this.getDocument())return;
     this.onFocus(); event.preventDefault();event.stopImmediatePropagation();window.getSelection()?.removeAllRanges();
@@ -76,6 +78,10 @@ export class MarkupTools {
       if(entry)this.editText(entry).catch(this.onError); else this.newText(event,page,view).catch(this.onError); return;
     }
     const point=this.point(event,page,view);
+    if(this.mode==='ai-image'){
+      this.stroke={mode:this.mode,page,view,viewport:view.viewport,pointer:event.pointerId,base:this.base(page),points:[point,point]};
+      this.container.setPointerCapture(event.pointerId);this.previewRegion();return;
+    }
     this.stroke={mode:this.mode,page,view,pointer:event.pointerId,base:this.base(page),points:[point],color:$('tool-color').value,width:Number($('tool-width').value),brush:Number($('tool-eraser-size').value)/view.viewport.scale,rects:[],original:this.annotations.entries};
     this.container.setPointerCapture(event.pointerId);
     if(this.mode==='erase')this.eraseAt(point);else this.preview();
@@ -89,6 +95,7 @@ export class MarkupTools {
     const s=this.stroke;if(!s || event.pointerId!==s.pointer)return;
     event.preventDefault();event.stopImmediatePropagation();
     if(!s.page.isConnected || this.getDocument()?.id!==s.base.documentId){this.cancelStroke();return;}
+    if(s.mode==='ai-image'){if(s.view.viewport!==s.viewport){this.cancelStroke();return;}s.points[1]=this.point(event,s.page,s.view);this.previewRegion();return;}
     const b=s.page.getBoundingClientRect();
     if(event.clientX<b.left || event.clientX>b.right || event.clientY<b.top || event.clientY>b.bottom){s.outside=true;return;}
     if(s.outside){this.up(event);return;}
@@ -117,11 +124,24 @@ export class MarkupTools {
     const points=s.points.length===1?[s.points[0],[s.points[0][0]+0.01,s.points[0][1]]]:s.points;
     s.path.setAttribute('d',points.map((p,i)=>`${i?'L':'M'}${s.view.viewport.convertToViewportPoint(...p).join(' ')}`).join(' '));
   }
+  previewRegion(){
+    const s=this.stroke;if(!s.region){s.region=document.createElement('div');s.region.className='ai-image-region';s.page.append(s.region);}
+    const [a,b]=s.points.map(p=>s.view.viewport.convertToViewportPoint(...p));
+    Object.assign(s.region.style,{left:Math.min(a[0],b[0])+'px',top:Math.min(a[1],b[1])+'px',width:Math.abs(a[0]-b[0])+'px',height:Math.abs(a[1]-b[1])+'px'});
+  }
   up(event) {
     const s=this.stroke;if(!s || event.pointerId!==s.pointer)return;
     this.stroke=null;event.preventDefault();event.stopImmediatePropagation();
     if(this.container.hasPointerCapture(s.pointer))this.container.releasePointerCapture(s.pointer);
     const page=Number(s.page.dataset.pageNumber);
+    if(s.mode==='ai-image'){
+      s.region?.remove();this.setMode('select');this.suppressClick=true;
+      if(s.view.viewport!==s.viewport||this.getDocument()?.id!==s.base.documentId)return;
+      s.points[1]=this.point(event,s.page,s.view);
+      const [a,b]=s.points.map(p=>s.view.viewport.convertToViewportPoint(...p));
+      if(Math.abs(a[0]-b[0])<12||Math.abs(a[1]-b[1])<12){this.onError(new Error('Vùng chọn quá nhỏ. Hãy kéo chọn trọn hình hoặc bảng.'));return;}
+      Promise.resolve(this.onCapture({documentId:s.base.documentId,page,rect:[...s.points[0],...s.points[1]],rotation:s.view.viewport.rotation})).catch(this.onError);return;
+    }
     if(s.mode==='erase')this.save(async()=>{try{await this.desktop.eraseAnnotations({documentId:s.base.documentId,page,rects:s.rects});}finally{await this.onSaved();}});
     else {
       if(s.points.length===1)s.points.push([s.points[0][0]+0.01,s.points[0][1]]);
@@ -130,7 +150,7 @@ export class MarkupTools {
     }
   }
   cancelStroke() {
-    const s=this.stroke;if(!s)return;this.stroke=null;s.svg?.remove();
+    const s=this.stroke;if(!s)return;this.stroke=null;s.svg?.remove();s.region?.remove();
     if(s.mode==='erase'){this.annotations.entries=s.original;this.annotations.paintAll();}
     if(this.container.hasPointerCapture(s.pointer))this.container.releasePointerCapture(s.pointer);
   }

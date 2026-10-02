@@ -15,6 +15,8 @@ contextBridge.exposeInMainWorld('desktop', {
   deleteChat:id=>ipcRenderer.invoke('chat:delete',id),
   openChatSource:input=>ipcRenderer.invoke('chat:source',input),
   sendChat:input=>ipcRenderer.invoke('chat:send',input),
+  addChatImage:input=>ipcRenderer.invoke('chat:image-add',input),
+  removeChatImage:id=>ipcRenderer.invoke('chat:image-remove',id),
   cancelChat:id=>ipcRenderer.invoke('chat:cancel',id),
   onChatEvent:callback=>{const fn=(_event,event)=>callback(event);ipcRenderer.on('chat:event',fn);return()=>ipcRenderer.removeListener('chat:event',fn);},
   savePosition: (id, position) => ipcRenderer.invoke('state:position', { id, position }),

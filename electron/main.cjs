@@ -7,6 +7,7 @@ const { randomUUID, createHash } = require('node:crypto');
 const { Readable } = require('node:stream');
 
 protocol.registerSchemesAsPrivileged([{ scheme: 'rm-pdf', privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: true, stream: true } }]);
+protocol.registerSchemesAsPrivileged([{ scheme: 'rm-chat-image', privileges: { standard: true, secure: true, supportFetchAPI: true } }]);
 if (process.env.RM_TEST_DATA) app.setPath('userData', process.env.RM_TEST_DATA);
 let win, stateFile, state, translateEmbedded, validateSettings, validateAnnotation, eraseAnnotations, writeQueue = Promise.resolve();
 let waitForAttachments=()=>Promise.resolve();
