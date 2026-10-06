@@ -1,12 +1,16 @@
 {
   "name": "rm-reader",
-  "version": "1.5.1",
+  "version": "1.8.0",
   "description": "Đọc reference manual PDF và dịch thuật ngữ lập trình nhúng sang tiếng Việt",
   "type": "module",
   "main": "electron/main.cjs",
   "author": "RM Reader",
   "private": true,
   "scripts": {
+    "test:vocabulary": "node tests/vocabulary-library-app.mjs",
+    "test:vocabulary:packaged": "node tests/vocabulary-library-app.mjs --packaged",
+    "test:ai-providers": "node tests/ai-providers-app.mjs",
+    "test:ai-providers:packaged": "node tests/ai-providers-app.mjs --packaged",
     "dev": "node scripts/dev.mjs",
     "build": "vite build",
     "start": "electron .",

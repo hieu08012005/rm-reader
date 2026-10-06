@@ -2,7 +2,7 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 const { createHash } = require('node:crypto');
 
-module.exports = async function registerAttachments({ app, dialog, shell, handle, documents, registerPdf, getWindow }) {
+module.exports = async function registerAttachments({ app, dialog, shell, handle, documents, registerPdf, getWindow, getUILanguage=()=> 'vi' }) {
   const { attachmentName, attachmentType, canOpenAttachment } = await import(require('node:url').pathToFileURL(path.join(__dirname,'../src/core/attachments.mjs')).href);
   const writes = new Map(), pending = new Set();
   function attachmentHandle(channel,work) {
@@ -34,7 +34,7 @@ module.exports = async function registerAttachments({ app, dialog, shell, handle
   });
   attachmentHandle('attachments:save',async input=>{
     const file=checked(input);
-    const result=await dialog.showSaveDialog(getWindow(),{title:'Lưu tệp đính kèm',defaultPath:path.join(app.getPath('documents'),file.name)});
+    const result=await dialog.showSaveDialog(getWindow(),{title:getUILanguage()==='en'?'Save attachment':'Lưu tệp đính kèm',defaultPath:path.join(app.getPath('documents'),file.name)});
     if (result.canceled || !result.filePath) return { canceled:true };
     if (path.resolve(result.filePath).toLowerCase()===path.resolve(file.doc.path).toLowerCase()) throw new Error('Hãy chọn tên khác với PDF nguồn.');
     await fs.writeFile(result.filePath,file.data);return { saved:true,name:file.name };
@@ -43,7 +43,7 @@ module.exports = async function registerAttachments({ app, dialog, shell, handle
     if (!Array.isArray(inputs) || !inputs.length || inputs.length>1000) throw new Error('Danh sách tệp không hợp lệ.');
     const files=inputs.map(checked);
     if (files.reduce((sum,file)=>sum+file.data.length,0)>1024*1024*1024) throw new Error('Hãy lưu từng tệp khi tổng dung lượng lớn hơn 1 GB.');
-    const result=await dialog.showOpenDialog(getWindow(),{title:'Chọn thư mục lưu tất cả tệp đính kèm',properties:['openDirectory','createDirectory']});
+    const result=await dialog.showOpenDialog(getWindow(),{title:getUILanguage()==='en'?'Choose a folder for all attachments':'Chọn thư mục lưu tất cả tệp đính kèm',properties:['openDirectory','createDirectory']});
     if (result.canceled || !result.filePaths[0])return {canceled:true};
     const folder=result.filePaths[0];let saved=0;
     for (const file of files) {

@@ -1,0 +1,69 @@
+{
+  "version": "1.7.0",
+  "completedAt": "2026-10-05T02:50:54.277Z",
+  "unitTests": {
+    "passed": 85,
+    "failed": 0
+  },
+  "sourceChecks": {
+    "passed": 11,
+    "checks": [
+      "Old profile boots with distinct colors for nested PDF bookmarks",
+      "Search keeps all eight original depth levels when opening matching ancestors",
+      "RGB is previewed immediately and Cancel restores saved colors",
+      "Escape also discards preview changes",
+      "Native picker synchronizes RGB; out-of-range and fractional channels cannot be saved",
+      "Deep-level colors and added levels save without altering AI settings or encrypted keys",
+      "Custom colors survive active and hover states; bookmark navigation and Back still work",
+      "The same level colors apply when switching PDF documents",
+      "RGB and added levels persist across application restart",
+      "Default colors can be restored and saved for all levels",
+      "IPC rejects unsafe colors and renderer has no errors"
+    ],
+    "errors": []
+  },
+  "packagedChecks": {
+    "passed": 11,
+    "checks": [
+      "Old profile boots with distinct colors for nested PDF bookmarks",
+      "Search keeps all eight original depth levels when opening matching ancestors",
+      "RGB is previewed immediately and Cancel restores saved colors",
+      "Escape also discards preview changes",
+      "Native picker synchronizes RGB; out-of-range and fractional channels cannot be saved",
+      "Deep-level colors and added levels save without altering AI settings or encrypted keys",
+      "Custom colors survive active and hover states; bookmark navigation and Back still work",
+      "The same level colors apply when switching PDF documents",
+      "RGB and added levels persist across application restart",
+      "Default colors can be restored and saved for all levels",
+      "IPC rejects unsafe colors and renderer has no errors"
+    ],
+    "errors": []
+  },
+  "totalPassed": 107,
+  "packagedSourceIntegrity": {
+    "passed": 13,
+    "files": [
+      "electron/main.cjs",
+      "electron/preload.cjs",
+      "electron/taskbar.cjs",
+      "src/core/outline-colors.mjs",
+      "src/core/ai-providers.mjs",
+      "src/core/translation.mjs",
+      "dist/index.html",
+      "dist/assets/cursor-editorTextHighlight-kG3uUOwL.svg",
+      "dist/assets/index-BLsQgCAh.js",
+      "dist/assets/index-DDHQd5yZ.css",
+      "dist/assets/pdf.worker-TGcf_-kp.mjs",
+      "dist/assets/pdf_viewer-CBasC8o9.js",
+      "dist/assets/preload-helper-uBIymjUX.js"
+    ]
+  },
+  "artifact": {
+    "path": "E:/App_RM/release/RM-Reader-1.7.0.exe",
+    "bytes": 114745165,
+    "sha256": "D2E42F296DBCF1F7A780F3D5AB55B5998A1838F90B789D1C66BF9B1382CDAC70"
+  },
+  "source": "C:/Users/ADMIN/OneDrive/Tài liệu/ChatGPT/APP đọc RM",
+  "backup": "E:/App_RM/updates/1.7.0/original-source",
+  "screenshot": "E:/App_RM/updates/1.7.0/outline-colors-packaged.png"
+}

@@ -1,0 +1,213 @@
+{
+  "version": "1.8.0",
+  "verifiedAt": "2026-10-05T04:04:20.996Z",
+  "unitTests": 89,
+  "totalPassed": 214,
+  "interfaceLanguage": "Vietnamese and English, including both PDF panes; stored meanings untouched",
+  "exportScope": "one explicitly selected vocabulary folder; cancel leaves files untouched",
+  "pdf": {
+    "pages": 3,
+    "terms": 23,
+    "selectedFolderOnly": true,
+    "vietnameseDiacritics": true,
+    "allPagesVisuallyReviewed": true
+  },
+  "sourceAndBundleMatch": [
+    "electron/main.cjs",
+    "electron/preload.cjs",
+    "electron/attachments.cjs",
+    "electron/vocabulary.cjs",
+    "electron/taskbar.cjs",
+    "src/core/vocabulary.mjs",
+    "src/core/ai-providers.mjs",
+    "src/core/outline-colors.mjs",
+    "dist/index.html",
+    "dist/assets/cursor-editorTextHighlight-kG3uUOwL.svg",
+    "dist/assets/index-5E4WHYnK.css",
+    "dist/assets/index-8NJ0tT0i.js",
+    "dist/assets/pdf.worker-TGcf_-kp.mjs",
+    "dist/assets/pdf_viewer-CBasC8o9.js",
+    "dist/assets/preload-helper-uBIymjUX.js"
+  ],
+  "executable": "E:/App_RM/release/RM-Reader-1.8.0.exe",
+  "executableBytes": 114765227,
+  "sha256": "5d73c9e98f03753be838342e79b49c9f563150ed17c2be6b063bee012cbd30d0",
+  "reports": {
+    "vocabularySource": {
+      "passed": 14,
+      "checks": [
+        "Legacy vocabulary migrates to Unsorted without losing meaning, IDs or PDF sources",
+        "Interface switches to English without altering AI settings, unsaved inputs or encrypted keys",
+        "Folder selection isolates vocabulary and retains user text that resembles interface labels",
+        "Words move between folders; deleting a nonempty folder never drops its words",
+        "Flashcards reveal the right meanings, stay within the folder and save review results",
+        "Typing tests grade wrong and correct answers, ignore case/extra whitespace, and show words to review",
+        "Matching shuffles meanings, detects mistakes and records scores for the selected folder only",
+        "Matching covers a larger folder in successive rounds instead of dropping terms beyond six",
+        "Saving a real PDF selection asks for its folder, restores the selection and keeps a clickable source location",
+        "Switching languages back and forth leaves PDF text and saved Vietnamese definitions unchanged",
+        "PDF export requires one folder, saves to the chosen path and rejects unscoped exports",
+        "Canceling the save dialog leaves the exported file and vocabulary untouched",
+        "Folders, legacy vocab, review scores and interface language survive restart; API keys remain unchanged",
+        "No renderer errors across language changes, folder operations, all study modes and PDF export"
+      ],
+      "errors": [],
+      "pdf": "E:/App_RM/output/pdf/vocab-folder-source.pdf",
+      "folderId": "03b56d54-6e73-4961-9cc5-841024ed0bf0"
+    },
+    "vocabularyPackaged": {
+      "passed": 14,
+      "checks": [
+        "Legacy vocabulary migrates to Unsorted without losing meaning, IDs or PDF sources",
+        "Interface switches to English without altering AI settings, unsaved inputs or encrypted keys",
+        "Folder selection isolates vocabulary and retains user text that resembles interface labels",
+        "Words move between folders; deleting a nonempty folder never drops its words",
+        "Flashcards reveal the right meanings, stay within the folder and save review results",
+        "Typing tests grade wrong and correct answers, ignore case/extra whitespace, and show words to review",
+        "Matching shuffles meanings, detects mistakes and records scores for the selected folder only",
+        "Matching covers a larger folder in successive rounds instead of dropping terms beyond six",
+        "Saving a real PDF selection asks for its folder, restores the selection and keeps a clickable source location",
+        "Switching languages back and forth leaves PDF text and saved Vietnamese definitions unchanged",
+        "PDF export requires one folder, saves to the chosen path and rejects unscoped exports",
+        "Canceling the save dialog leaves the exported file and vocabulary untouched",
+        "Folders, legacy vocab, review scores and interface language survive restart; API keys remain unchanged",
+        "No renderer errors across language changes, folder operations, all study modes and PDF export"
+      ],
+      "errors": [],
+      "pdf": "E:/App_RM/output/pdf/vocab-folder-packaged.pdf",
+      "folderId": "9aee03b4-1dab-4afa-bdf4-70a1d8e84b97"
+    },
+    "readerSource": {
+      "checks": [
+        "App boots and displays Vietnamese interface",
+        "400-page PDF renders selectable text and nested outline",
+        "Blue internal link navigates to page 300",
+        "Back restores exact origin scroll and zoom",
+        "Named destination and three-level mouse/toolbar history work",
+        "Outline jumps to destination and Back returns",
+        "Dragging across blue linked text selects text without following link",
+        "Floating selection toolbar saves vocab before translation",
+        "Real mouse text selection translates embedded term offline",
+        "Selected vocab stores Vietnamese meaning and can be searched",
+        "Missing API key produces useful error while PDF stays readable",
+        "Provider response works and stale translation cannot overwrite new selection",
+        "PDF search highlights results, navigates and records history",
+        "Reopening PDF restores page 120, scroll offset and zoom",
+        "Windows app-command Back routes to PDF position history",
+        "Multi-file picker opens tabs and duplicate file reuses existing tab",
+        "Each tab preserves independent scroll, zoom and Back/Forward history",
+        "Start tab, keyboard tab switching and closing active tab work",
+        "Saved vocab reopens its PDF source and Back restores the reading position",
+        "Translation from an inactive tab cannot overwrite the active PDF",
+        "Closing all PDFs releases their tabs and returns to Start",
+        "Vocab survives app restart, reopens a closed PDF and supports deletion",
+        "Automatic translation still offers floating Save vocab and saves its meaning"
+      ],
+      "errors": []
+    },
+    "comparisonSource": {
+      "checks": [
+        "Dragging PDF tabs changes their order while retaining the active document",
+        "Keyboard tab reordering supports the same stable document state",
+        "Two local PDF panes render distinct files through the existing safe IPC bridge",
+        "Right pane scrolling and zoom do not move or zoom the left PDF",
+        "Mouse Back follows the focused pane and keeps independent histories",
+        "Real text selection creates a colored mark and note at the exact source",
+        "Highlight stays aligned after zoom by restoring PDF coordinates",
+        "Inline note marker opens the editor and supports changing color and text",
+        "Selections in the right PDF save notes to that PDF and repaint both panes",
+        "Right pane translation uses the shared Vietnamese panel and saves the correct vocab source",
+        "Note search and click return to its marked line with Back preserving the reading position",
+        "Selected PDF lines retain their original line breaks in the Vietnamese panel source",
+        "Leaving and reopening comparison preserves the right PDF and its position",
+        "Notes and highlights survive restart and reopen a closed source PDF",
+        "Deleting a note removes its stored entry and PDF highlight"
+      ],
+      "errors": [],
+      "packaged": false
+    },
+    "comparisonPackaged": {
+      "checks": [
+        "Dragging PDF tabs changes their order while retaining the active document",
+        "Keyboard tab reordering supports the same stable document state",
+        "Two local PDF panes render distinct files through the existing safe IPC bridge",
+        "Right pane scrolling and zoom do not move or zoom the left PDF",
+        "Mouse Back follows the focused pane and keeps independent histories",
+        "Real text selection creates a colored mark and note at the exact source",
+        "Highlight stays aligned after zoom by restoring PDF coordinates",
+        "Inline note marker opens the editor and supports changing color and text",
+        "Selections in the right PDF save notes to that PDF and repaint both panes",
+        "Right pane translation uses the shared Vietnamese panel and saves the correct vocab source",
+        "Note search and click return to its marked line with Back preserving the reading position",
+        "Selected PDF lines retain their original line breaks in the Vietnamese panel source",
+        "Leaving and reopening comparison preserves the right PDF and its position",
+        "Notes and highlights survive restart and reopen a closed source PDF",
+        "Deleting a note removes its stored entry and PDF highlight"
+      ],
+      "errors": [],
+      "packaged": true
+    },
+    "providersPackaged": {
+      "passed": 15,
+      "checks": [
+        "Legacy Gemini encrypted key migrates without asking for the key again",
+        "Settings offers seven providers with model picker and manual entry",
+        "openai: model listing, isolated key, encrypted save and native image chat with citations",
+        "anthropic: model listing, isolated key, encrypted save and native image chat with citations",
+        "deepseek: model listing, isolated key, encrypted save and native image chat with citations",
+        "openrouter: model listing, isolated key, encrypted save and native image chat with citations",
+        "custom: model listing, isolated key, encrypted save and native image chat with citations",
+        "ollama: model listing, isolated key, encrypted save and native image chat with citations",
+        "Switching back restores provider model and saved key status",
+        "All provider keys are encrypted on disk; Gemini key remains intact",
+        "Changing custom Base URL never sends an existing provider/endpoint key",
+        "Provider profiles and encrypted keys survive app restart",
+        "Custom key status recognizes an earlier saved endpoint after switching URLs",
+        "Clearing one key preserves the keys of other providers",
+        "No frontend errors across provider switches, chats and restart"
+      ],
+      "errors": []
+    },
+    "imageChatPackaged": {
+      "checks": [
+        "Dragging a region of an image-only PDF creates a readable preview with page 2, zoom and no AI request",
+        "Image preview and Send remain visible with conversation and source controls collapsed",
+        "Send includes real cropped image bytes without outside margins, freezes page/region and stores media separately from history",
+        "A transient Windows history file lock is retried without losing the completed answer",
+        "Image citation returns to the exact PDF region and Back restores the reading position",
+        "Follow-up and Retry retain the original image rather than using the newly viewed page",
+        "An attached image can be removed before Send without making an AI request",
+        "Image-only conversations work without a PDF, open the image as source and keep it for follow-up",
+        "Clipboard paste and multiple attachments work, and a fourth image is rejected before sending",
+        "Three-image preview fits a narrow 280px chat panel while keeping Send accessible",
+        "Region selection in the comparison pane sends that pane image and correct source owner",
+        "Backend rejects forged attachment IDs and invalid image bytes",
+        "Rotated PDF crops preserve orientation and Escape cancels an unfinished selection",
+        "Image previews, original source and usable image history survive restart",
+        "Deleting a conversation removes image files no longer referenced by history",
+        "Explicitly enabling PDF context sends both the chosen text and image in one question"
+      ],
+      "errors": [],
+      "packaged": true
+    },
+    "attachmentsPackaged": {
+      "checks": [
+        "Sidebar lists named attachments and unvisited page-only attachments without duplicate page icons",
+        "Filename and Vietnamese description search find a spreadsheet",
+        "Excel attachment opens through Windows association with intact bytes in the app extraction folder",
+        "Save attachment writes the exact embedded workbook to the selected location",
+        "Canceling Save leaves the document and sidebar usable",
+        "Executable attachments support Save and cannot launch through the backend",
+        "Save all includes all files regardless of search, sanitizes embedded paths and preserves existing filenames",
+        "Embedded PDF opens inside a new app tab and the sidebar follows the active document",
+        "Opening the same embedded PDF reuses a stable extracted file and existing tab",
+        "Double-clicking a real paperclip annotation opens the embedded PDF through the same tab workflow",
+        "PDFs without attachments show a clear empty state",
+        "The shared attachment sidebar reads the focused right PDF without changing the left document",
+        "A right-pane PDF attachment opens into the right pane independently"
+      ],
+      "errors": [],
+      "packaged": true
+    }
+  }
+}

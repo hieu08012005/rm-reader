@@ -4,12 +4,17 @@ import './style.css';
 import { decorateIcons, icon } from './icons.mjs';
 import { NavigationHistory } from './core/history.mjs';
 import { normalizeSelection } from './core/glossary.mjs';
+import { AI_PROVIDERS, credentialScope } from './core/ai-providers.mjs';
 import { selectionRects, viewportRect } from './core/annotations.mjs';
 import { AnnotationManager } from './annotations.mjs';
 import { MarkupTools } from './markup.mjs';
 import { AttachmentManager } from './attachments.mjs';
 import { ChatManager } from './chat.mjs';
 import { capturePdfRegion } from './pdf-image.mjs';
+import { OutlineColorEditor } from './outline-colors.mjs';
+import { outlineLevelColor } from './core/outline-colors.mjs';
+import { VocabularyLibrary } from './vocabulary.mjs';
+import { setLanguage, getLanguage, t } from './i18n.mjs';
 
 globalThis.pdfjsLib = pdfjs;
 pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
@@ -450,6 +455,15 @@ $('password-dialog').addEventListener('cancel', event => { event.preventDefault(
 
 let outlineData = [];
 const expandedOutline = new Set();
+const outlineColors = new OutlineColorEditor({
+  desktop,
+  getDepth: () => {
+    function depth(items) { return items.reduce((max, item) => Math.max(max, 1 + depth(item.items || [])), 0); }
+    return depth(outlineData);
+  },
+  onPreview: colors => document.querySelectorAll('.outline-row').forEach(row => row.style.setProperty('--outline-level-color', outlineLevelColor(colors, Number(row.dataset.level)))),
+  onSaved: async () => { await refreshState(); toast('Đã lưu màu theo cấp mục lục.'); }
+});
 function renderOutline(items) {
   outlineData = items || []; expandedOutline.clear();
   outlineData.forEach((_item, i) => expandedOutline.add(String(i)));
@@ -460,17 +474,19 @@ function drawOutline() {
   if (!outlineData.length) { const note = document.createElement('p'); note.className = 'empty-note'; note.textContent = 'PDF này không có mục lục bookmarks. Bạn vẫn có thể nhấp liên kết trong trang mục lục của tài liệu.'; tree.append(note); return; }
   const query = $('outline-filter').value.trim().toLocaleLowerCase('vi');
   const matches = item => item.title.toLocaleLowerCase('vi').includes(query) || item.items?.some(matches);
-  function appendItems(items, parent, prefix = '') {
+  function appendItems(items, parent, prefix = '', level = 1) {
     items.forEach((item, index) => {
       if (query && !matches(item)) return;
       const id = prefix ? `${prefix}.${index}` : String(index);
       const wrapper = document.createElement('div'); const row = document.createElement('div'); row.className = 'outline-row';
+      row.dataset.level = level;
+      row.style.setProperty('--outline-level-color', outlineLevelColor(outlineColors.dialog.open ? outlineColors.draft : outlineColors.colors, level));
       const children = item.items || []; const open = Boolean(query) || expandedOutline.has(id);
       const toggle = document.createElement('button'); toggle.className = 'outline-toggle' + (open ? ' open' : '');
       toggle.setAttribute('aria-label', `${open ? 'Thu gọn' : 'Mở rộng'} ${item.title}`);
       if (children.length) { toggle.innerHTML = icon('chevron'); toggle.setAttribute('aria-expanded', String(open)); toggle.onclick = () => { if (expandedOutline.has(id)) expandedOutline.delete(id); else expandedOutline.add(id); drawOutline(); }; }
       else { toggle.disabled = true; toggle.setAttribute('aria-hidden', 'true'); }
-      const button = document.createElement('button'); button.className = 'outline-item'; button.textContent = item.title; button.title = item.title;
+      const button = document.createElement('button'); button.className = 'outline-item'; button.textContent = item.title; button.title = `${item.title} · Cấp ${level}`;
       button.onclick = async () => {
         document.querySelectorAll('.outline-row.active').forEach(node => node.classList.remove('active')); row.classList.add('active');
         if (item.dest) await linkService.goToDestination(item.dest);
@@ -478,7 +494,7 @@ function drawOutline() {
         else toast('Mục này không có liên kết tới trang.');
       };
       row.append(toggle, button); wrapper.append(row);
-      if (children.length && open) { const nested = document.createElement('div'); nested.className = 'outline-children'; appendItems(children, nested, id); wrapper.append(nested); }
+      if (children.length && open) { const nested = document.createElement('div'); nested.className = 'outline-children'; appendItems(children, nested, id, level + 1); wrapper.append(nested); }
       parent.append(wrapper);
     });
   }
@@ -636,8 +652,8 @@ $('selection-note').onclick = () => {
   $('selection-tools').hidden = true;
   if (secondary) window.parent.rmReader.editAnnotation(draft); else annotations.openEditor(draft);
 };
-$('selection-save').onclick = saveSelectedVocabulary;
-$('save-translated-vocab').onclick = saveSelectedVocabulary;
+$('selection-save').onclick = () => saveSelectedVocabulary();
+$('save-translated-vocab').onclick = () => saveSelectedVocabulary();
 $('selection-translate').onclick = () => translateSelection(); $('retry-translation').onclick = () => translateSelection();
 async function translateSelection() {
   if (!selectedText) return;
@@ -671,10 +687,16 @@ $('copy-result').onclick = () => navigator.clipboard.writeText($('translation-re
 
 async function refreshState() {
   const state = await desktop.getState(); preferences = state.settings; recentDocuments = state.recent;
-  vocabulary = state.vocabulary || []; renderVocabulary();
+  const languageChanged=getLanguage()!==(state.uiLanguage || 'vi');
+  setLanguage(state.uiLanguage);
+  if(languageChanged)chat?.render();
+  $('ui-language').value=state.uiLanguage || 'vi';
+  outlineColors.update(state.outlineColors);
+  vocabulary = state.vocabulary || []; vocabularyLibrary.update(state);
   annotations.update(state.annotations);
   $('app-version').textContent = `v${state.version}`;
   $('auto-translate').checked = preferences.autoTranslate;
+  $('chat-provider-label').textContent = `${AI_PROVIDERS[preferences.provider]?.name || 'AI'} · TIẾNG VIỆT`;
   document.documentElement.style.setProperty('--translation-font', preferences.translationFont + 'px');
   const list = $('recent-list'); list.replaceChildren();
   $('recent-documents').hidden = !recentDocuments.length;
@@ -690,77 +712,89 @@ function selectionSnapshot() {
   const doc = selectedDocumentInfo || documentInfo;
   return { text: selectedText, documentId: doc?.id, documentName: doc?.name, document: doc, position: selectedPosition || capturePosition(), rects: selectedRects };
 }
-async function saveSelectedVocabulary() {
-  if (secondary) return window.parent.rmReader.saveVocabularyFromPane(selectionSnapshot());
-  const doc = selectedDocumentInfo || documentInfo;
-  if (!selectedText || !doc) return toast('Hãy bôi đen một từ hoặc đoạn trong PDF trước.');
-  const translated = !requestId && !$('copy-result').disabled && !$('translation-result').classList.contains('error') && $('translation-source').textContent === selectedText;
-  try {
-    const state = await desktop.saveVocabulary({ text: selectedText, translation: translated ? $('translation-result').textContent : '', documentId: doc.id, position: selectedPosition || capturePosition() });
-    vocabulary = state.vocabulary; renderVocabulary();
-    toast(translated ? 'Đã lưu vocab và nghĩa tiếng Việt.' : 'Đã lưu vocab. Bạn có thể dịch rồi nhấn Lưu vocab để bổ sung nghĩa.');
-  } catch (error) { failure(error); }
-}
-function renderVocabulary() {
-  const list = $('vocabulary-list'); list.replaceChildren();
-  const query = $('vocabulary-filter').value.trim().toLocaleLowerCase('vi');
-  const items = vocabulary.filter(entry => `${entry.text} ${entry.translation} ${entry.documentName}`.toLocaleLowerCase('vi').includes(query));
-  $('vocabulary-count').textContent = `(${vocabulary.length})`;
-  if (!items.length) {
-    const empty = document.createElement('p'); empty.className = 'empty-note';
-    empty.textContent = vocabulary.length ? 'Không tìm thấy vocab phù hợp.' : 'Chưa có vocab. Bôi đen trong PDF rồi nhấn Lưu vocab để bắt đầu.';
-    list.append(empty); return;
+const vocabularyLibrary = new VocabularyLibrary({
+  desktop, onSaved:refreshState, onMessage:toast,
+  onSource:async id=>{
+    const target=await desktop.openVocabulary(id);
+    $('vocabulary-dialog').close(); await openDocument(target.document);
+    if(pdfDocument&&documentInfo.id===target.document.id)await queueNavigation(async()=>{recordJump();await restorePosition(target.position);});
   }
-  items.forEach(entry => {
-    const card = document.createElement('article'); card.className = 'vocabulary-card';
-    const word = document.createElement('h3'); word.textContent = entry.text;
-    const meaning = document.createElement('p'); meaning.className = 'vocabulary-meaning' + (entry.translation ? '' : ' no-meaning');
-    meaning.textContent = entry.translation || 'Chưa lưu nghĩa tiếng Việt';
-    const footer = document.createElement('div'); footer.className = 'vocabulary-card-footer';
-    const source = document.createElement('button'); source.className = 'vocabulary-source'; source.innerHTML = icon('file');
-    const label = document.createElement('span'); label.textContent = `${entry.documentName} · Trang ${entry.page}`; source.append(label); source.title = 'Mở lại vị trí đã lưu trong PDF';
-    source.onclick = async () => {
-      $('vocabulary-error').textContent = '';
-      try {
-        const target = await desktop.openVocabulary(entry.id);
-        $('vocabulary-dialog').close(); await openDocument(target.document);
-        if (pdfDocument && documentInfo.id === target.document.id) {
-          await queueNavigation(async () => { recordJump(); await restorePosition(target.position); });
-        }
-      } catch (error) { failure(error); }
-    };
-    const copy = document.createElement('button'); copy.className = 'icon-button'; copy.innerHTML = icon('copy'); copy.title = 'Sao chép vocab và nghĩa'; copy.setAttribute('aria-label', `Sao chép ${entry.text}`);
-    copy.onclick = () => navigator.clipboard.writeText(entry.text + (entry.translation ? '\n' + entry.translation : '')).then(() => toast('Đã sao chép vocab.')).catch(failure);
-    const remove = document.createElement('button'); remove.className = 'icon-button vocabulary-delete'; remove.innerHTML = icon('close'); remove.title = 'Xóa vocab'; remove.setAttribute('aria-label', `Xóa vocab ${entry.text}`);
-    remove.onclick = async () => {
-      try { const state = await desktop.deleteVocabulary(entry.id); vocabulary = state.vocabulary; renderVocabulary(); }
-      catch (error) { $('vocabulary-error').textContent = error.message; }
-    };
-    footer.append(source, copy, remove); card.append(word, meaning, footer); list.append(card);
-  });
+});
+async function saveSelectedVocabulary(selectionOwner=window) {
+  if (secondary) return window.parent.rmReader.saveVocabularyFromPane(selectionSnapshot(),selectionOwner);
+  const doc=selectedDocumentInfo||documentInfo;
+  if(!selectedText||!doc)return toast(t('Hãy bôi đen một từ hoặc đoạn trong PDF trước.'));
+  const translated=!requestId&&!$('copy-result').disabled&&!$('translation-result').classList.contains('error')&&$('translation-source').textContent===selectedText;
+  vocabularyLibrary.capture({text:selectedText,translation:translated?$('translation-result').textContent:'',documentId:doc.id,position:selectedPosition||capturePosition()},selectionOwner);
 }
-$('vocabulary-button').onclick = async () => { await refreshState(); $('vocabulary-error').textContent = ''; $('vocabulary-dialog').showModal(); $('vocabulary-filter').focus(); };
-$('vocabulary-close').onclick = () => $('vocabulary-dialog').close();
-$('vocabulary-filter').oninput = renderVocabulary;
-function providerFields() { const isGemini = $('provider').value === 'gemini'; $('gemini-settings').hidden = !isGemini; $('ollama-settings').hidden = isGemini; }
+$('ui-language').onchange=async()=>{
+  try{await desktop.saveUILanguage($('ui-language').value);await refreshState();}
+  catch(error){failure(error);}
+};
+function providerFields() {
+  const provider = $('provider').value, preset = AI_PROVIDERS[provider];
+  $('gemini-settings').hidden = provider === 'ollama';
+  $('ollama-settings').hidden = !['ollama', 'custom'].includes(provider);
+  $('endpoint-label').textContent = provider === 'ollama' ? 'Địa chỉ Ollama' : 'Base URL của API';
+  $('endpoint-hint').textContent = provider === 'ollama' ? 'Cài Ollama và tải model trước. Model chạy trên máy bạn; không cần API key.' : 'API tương thích OpenAI, ví dụ https://example.com/v1 hoặc http://localhost:1234/v1. Key có thể để trống với máy chủ cục bộ.';
+  $('api-key').placeholder = `Nhập API key ${preset.name}`;
+  $('get-api-key').hidden = !preset.keysUrl;
+  $('get-api-key').textContent = `Mở trang API key ${preset.name} ↗`;
+  $('auto-fallback').parentElement.hidden = provider !== 'gemini';
+  updateKeyStatus();
+}
+function updateKeyStatus() {
+  const provider = $('provider').value;
+  const profile = preferences.aiProfiles?.[provider] || (preferences.provider === provider ? preferences : null);
+  let hasKey = profile?.hasApiKey;
+  if (provider === 'custom') {
+    try { hasKey = preferences.savedKeyScopes?.includes(credentialScope({ provider, endpoint: $('endpoint').value })); }
+    catch { hasKey = false; }
+  }
+  $('key-status').textContent = hasKey ? 'Đã lưu key cho dịch vụ này. Để trống để tiếp tục dùng key đã lưu.' : 'Chưa lưu key cho dịch vụ/địa chỉ này. Key được mã hóa bằng tài khoản Windows của bạn.';
+}
+let modelListGeneration = 0;
+function resetModelList() { modelListGeneration++; $('ai-models').replaceChildren(); $('model-list-status').textContent = ''; $('load-models').disabled = false; }
 function showSettings() {
   $('provider').value = preferences.provider; $('model').value = preferences.model; $('endpoint').value = preferences.endpoint;
   $('api-key').value = ''; $('clear-key').checked = false; $('translation-font').value = preferences.translationFont;
   $('auto-fallback').checked = preferences.autoFallback !== false;
   $('chat-model').value=preferences.chatModel||'';$('chat-context-limit').value=preferences.chatContextChars||24000;$('chat-output-limit').value=preferences.chatOutputTokens||4096;
   $('key-status').textContent = preferences.hasApiKey ? 'Đã lưu API key. Để trống để tiếp tục dùng key hiện tại.' : 'API key được mã hóa bằng tài khoản Windows của bạn.';
-  $('settings-error').textContent = ''; providerFields(); $('settings-dialog').showModal();
+  $('settings-error').textContent = ''; resetModelList(); providerFields(); $('settings-dialog').showModal();
 }
 $('settings-button').onclick = showSettings;
 $('settings-close').onclick = () => $('settings-dialog').close(); $('settings-cancel').onclick = () => $('settings-dialog').close();
-$('provider').onchange = () => { providerFields(); $('model').value = $('provider').value === preferences.provider ? preferences.model : ($('provider').value === 'gemini' ? 'gemini-3.8-flash' : 'qwen3:8b'); };
-$('get-api-key').onclick = () => desktop.openExternal('https://aistudio.google.com/apikey').catch(failure);
+$('settings-dialog').addEventListener('close', () => { $('api-key').value = ''; resetModelList(); });
+$('provider').onchange = () => {
+  const provider = $('provider').value, profile = preferences.aiProfiles?.[provider];
+  $('model').value = profile?.model || AI_PROVIDERS[provider].model || '';
+  $('chat-model').value = profile?.chatModel || '';
+  $('endpoint').value = profile?.endpoint || AI_PROVIDERS[provider].endpoint;
+  $('api-key').value = ''; $('clear-key').checked = false; resetModelList(); providerFields();
+};
+$('endpoint').oninput = () => { $('api-key').value = ''; $('clear-key').checked = false; resetModelList(); updateKeyStatus(); };
+$('api-key').oninput = resetModelList;
+$('clear-key').onchange = resetModelList;
+$('get-api-key').onclick = () => desktop.openExternal(AI_PROVIDERS[$('provider').value].keysUrl).catch(failure);
+$('load-models').onclick = async () => {
+  const generation = ++modelListGeneration;
+  $('load-models').disabled = true; $('model-list-status').textContent = 'Đang tải model…'; $('settings-error').textContent = '';
+  try {
+    const models = await desktop.listAIModels({ provider: $('provider').value, endpoint: $('endpoint').value, apiKey: $('api-key').value, clearKey: $('clear-key').checked });
+    if (generation !== modelListGeneration) return;
+    $('ai-models').replaceChildren(...models.map(id => { const option = document.createElement('option'); option.value = id; return option; }));
+    $('model-list-status').textContent = models.length ? `Đã tải ${models.length} model. Bấm vào ô tên model để chọn hoặc tự nhập; danh sách có thể gồm model không dùng cho chat.` : 'Dịch vụ không trả về model. Bạn vẫn có thể tự nhập tên model.';
+    $('model').focus();
+  } catch (error) { if (generation === modelListGeneration) $('model-list-status').textContent = error.message.replace(/^Error invoking remote method '[^']+': (?:Error: )?/, ''); }
+  finally { if (generation === modelListGeneration) $('load-models').disabled = false; }
+};
 $('settings-form').addEventListener('submit', async event => {
   event.preventDefault(); $('settings-error').textContent = '';
   try {
     cancelTranslation();
     await desktop.saveSettings({ provider: $('provider').value, apiKey: $('api-key').value, clearKey: $('clear-key').checked, model: $('model').value, endpoint: $('endpoint').value, autoTranslate: $('auto-translate').checked, autoFallback: $('auto-fallback').checked, translationFont: Number($('translation-font').value),chatModel:$('chat-model').value,chatContextChars:Number($('chat-context-limit').value),chatOutputTokens:Number($('chat-output-limit').value) });
-    await refreshState(); $('settings-dialog').close(); toast('Đã lưu cài đặt dịch.');
+    await refreshState(); $('settings-dialog').close(); $('api-key').value = ''; resetModelList(); toast('Đã lưu cài đặt AI.');
     if (selectedText && !$('translation-content').hidden) { $('translation-result').textContent = 'Nhấn Dịch đoạn đã chọn để dùng cài đặt mới.'; $('translation-result').classList.remove('error'); $('retry-translation').hidden = false; $('copy-result').disabled = true; }
   } catch (error) { $('settings-error').textContent = error.message.replace(/^Error invoking remote method '[^']+': (?:Error: )?/, ''); }
 });
@@ -800,6 +834,12 @@ if(!secondary){
 
 document.addEventListener('keydown', event => {
   if (document.querySelector('dialog[open]')) return;
+  if (event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey && event.key.toLowerCase() === 'z') {
+    // Keep native Undo in chat, search fields and PDF text-box editors.
+    if (event.defaultPrevented || event.isComposing || event.target?.isContentEditable ||
+        event.target?.closest?.('input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="textbox"]')) return;
+    event.preventDefault(); navigateFocused('back'); return;
+  }
   if (event.ctrlKey && event.key === 'Tab') {
     event.preventDefault(); const all = [null, ...tabs]; const index = all.indexOf(activeTab);
     activateTab(all[(index + (event.shiftKey ? -1 : 1) + all.length) % all.length]); return;
@@ -963,9 +1003,9 @@ window.rmReader = { openDocument, refreshState, navigate, goToMark, focusPane, j
   attachmentSourceChanged: source=>{if(focusedPane==='right')attachments.useSource(source);},
   editAnnotation: draft => annotations.openEditor(draft),
   translateFromPane: draft => { selectedText = draft.text; selectedPosition = draft.position; selectedDocumentInfo = draft.document; selectedRects = draft.rects; return translateSelection(); },
-  saveVocabularyFromPane: draft => {
+  saveVocabularyFromPane: (draft,selectionOwner) => {
     if (selectedText !== draft.text || selectedDocumentInfo?.id !== draft.documentId) { cancelTranslation(); $('copy-result').disabled = true; }
-    selectedText = draft.text; selectedPosition = draft.position; selectedDocumentInfo = draft.document; selectedRects = draft.rects; return saveSelectedVocabulary();
+    selectedText = draft.text; selectedPosition = draft.position; selectedDocumentInfo = draft.document; selectedRects = draft.rects; return saveSelectedVocabulary(selectionOwner);
   }
 };
 if(!secondary){chat=new ChatManager({desktop,getContexts:getChatContexts,getSettings:()=>preferences,onOpen:()=>setTranslationVisible(true),onSource:jumpChatSource,onError:failure});$('chat-close').onclick=()=>setTranslationVisible(false);eventBus.on('pagechanging',()=>chat.preview());}

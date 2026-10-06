@@ -1,0 +1,174 @@
+{
+  "version": "1.6.0",
+  "completedAt": "2026-10-03T06:58:20.639Z",
+  "unitTests": {
+    "passed": 78,
+    "failed": 0,
+    "command": "npm test"
+  },
+  "providersSource": {
+    "passed": 15,
+    "checks": [
+      "Legacy Gemini encrypted key migrates without asking for the key again",
+      "Settings offers seven providers with model picker and manual entry",
+      "openai: model listing, isolated key, encrypted save and native image chat with citations",
+      "anthropic: model listing, isolated key, encrypted save and native image chat with citations",
+      "deepseek: model listing, isolated key, encrypted save and native image chat with citations",
+      "openrouter: model listing, isolated key, encrypted save and native image chat with citations",
+      "custom: model listing, isolated key, encrypted save and native image chat with citations",
+      "ollama: model listing, isolated key, encrypted save and native image chat with citations",
+      "Switching back restores provider model and saved key status",
+      "All provider keys are encrypted on disk; Gemini key remains intact",
+      "Changing custom Base URL never sends an existing provider/endpoint key",
+      "Provider profiles and encrypted keys survive app restart",
+      "Custom key status recognizes an earlier saved endpoint after switching URLs",
+      "Clearing one key preserves the keys of other providers",
+      "No frontend errors across provider switches, chats and restart"
+    ],
+    "errors": []
+  },
+  "providersPackaged": {
+    "passed": 15,
+    "checks": [
+      "Legacy Gemini encrypted key migrates without asking for the key again",
+      "Settings offers seven providers with model picker and manual entry",
+      "openai: model listing, isolated key, encrypted save and native image chat with citations",
+      "anthropic: model listing, isolated key, encrypted save and native image chat with citations",
+      "deepseek: model listing, isolated key, encrypted save and native image chat with citations",
+      "openrouter: model listing, isolated key, encrypted save and native image chat with citations",
+      "custom: model listing, isolated key, encrypted save and native image chat with citations",
+      "ollama: model listing, isolated key, encrypted save and native image chat with citations",
+      "Switching back restores provider model and saved key status",
+      "All provider keys are encrypted on disk; Gemini key remains intact",
+      "Changing custom Base URL never sends an existing provider/endpoint key",
+      "Provider profiles and encrypted keys survive app restart",
+      "Custom key status recognizes an earlier saved endpoint after switching URLs",
+      "Clearing one key preserves the keys of other providers",
+      "No frontend errors across provider switches, chats and restart"
+    ],
+    "errors": []
+  },
+  "imageSource": {
+    "checks": [
+      "Dragging a region of an image-only PDF creates a readable preview with page 2, zoom and no AI request",
+      "Image preview and Send remain visible with conversation and source controls collapsed",
+      "Send includes real cropped image bytes without outside margins, freezes page/region and stores media separately from history",
+      "A transient Windows history file lock is retried without losing the completed answer",
+      "Image citation returns to the exact PDF region and Back restores the reading position",
+      "Follow-up and Retry retain the original image rather than using the newly viewed page",
+      "An attached image can be removed before Send without making an AI request",
+      "Image-only conversations work without a PDF, open the image as source and keep it for follow-up",
+      "Clipboard paste and multiple attachments work, and a fourth image is rejected before sending",
+      "Three-image preview fits a narrow 280px chat panel while keeping Send accessible",
+      "Region selection in the comparison pane sends that pane image and correct source owner",
+      "Backend rejects forged attachment IDs and invalid image bytes",
+      "Rotated PDF crops preserve orientation and Escape cancels an unfinished selection",
+      "Image previews, original source and usable image history survive restart",
+      "Deleting a conversation removes image files no longer referenced by history",
+      "Explicitly enabling PDF context sends both the chosen text and image in one question"
+    ],
+    "errors": [],
+    "packaged": false
+  },
+  "imagePackaged": {
+    "checks": [
+      "Dragging a region of an image-only PDF creates a readable preview with page 2, zoom and no AI request",
+      "Image preview and Send remain visible with conversation and source controls collapsed",
+      "Send includes real cropped image bytes without outside margins, freezes page/region and stores media separately from history",
+      "A transient Windows history file lock is retried without losing the completed answer",
+      "Image citation returns to the exact PDF region and Back restores the reading position",
+      "Follow-up and Retry retain the original image rather than using the newly viewed page",
+      "An attached image can be removed before Send without making an AI request",
+      "Image-only conversations work without a PDF, open the image as source and keep it for follow-up",
+      "Clipboard paste and multiple attachments work, and a fourth image is rejected before sending",
+      "Three-image preview fits a narrow 280px chat panel while keeping Send accessible",
+      "Region selection in the comparison pane sends that pane image and correct source owner",
+      "Backend rejects forged attachment IDs and invalid image bytes",
+      "Rotated PDF crops preserve orientation and Escape cancels an unfinished selection",
+      "Image previews, original source and usable image history survive restart",
+      "Deleting a conversation removes image files no longer referenced by history",
+      "Explicitly enabling PDF context sends both the chosen text and image in one question"
+    ],
+    "errors": [],
+    "packaged": true
+  },
+  "chatSource": {
+    "checks": [
+      "Selection opens Chat AI with exact document/page/anchor and makes no API request until Send",
+      "Gemini uses saved encrypted key in backend, technical system instructions and only selected PDF text",
+      "Streaming answer supports tables, C code/copy, token usage and rejects invented citation/HTML",
+      "Translation and Chat tabs retain content and follow-up sends complete previous turns",
+      "Local indexing finds a unique register parameter on a different page in a long manual",
+      "Verified citation jumps to its physical page/anchor, highlights source and mouse Back restores reading position",
+      "Changing PDFs during a response never changes the sent source or mixes the destination conversation",
+      "Internal PDF jumps after a cross-document citation retain their normal Back order",
+      "A citation into another PDF activates its tab and Back returns to the previous PDF",
+      "Stop cancels the streaming HTTP request and saves the partial answer",
+      "Retry reuses the frozen question/sources without duplicate user turns",
+      "Sending an identical question again preserves both turns instead of treating it as Retry",
+      "Exhausted quota displays an actionable error without endless retry",
+      "Comparison searches both panes and attaches separately identified manual/datasheet passages",
+      "Conversation questions, answers, citations and renamed title survive app restart",
+      "Local chat storage never includes key and existing Windows encryption remains intact",
+      "Changed source PDFs are marked stale and citation navigation refuses the new content",
+      "Saved conversation can be explicitly selected and deleted"
+    ],
+    "errors": [],
+    "packaged": false
+  },
+  "chatPackaged": {
+    "checks": [
+      "Selection opens Chat AI with exact document/page/anchor and makes no API request until Send",
+      "Gemini uses saved encrypted key in backend, technical system instructions and only selected PDF text",
+      "Streaming answer supports tables, C code/copy, token usage and rejects invented citation/HTML",
+      "Translation and Chat tabs retain content and follow-up sends complete previous turns",
+      "Local indexing finds a unique register parameter on a different page in a long manual",
+      "Verified citation jumps to its physical page/anchor, highlights source and mouse Back restores reading position",
+      "Changing PDFs during a response never changes the sent source or mixes the destination conversation",
+      "Internal PDF jumps after a cross-document citation retain their normal Back order",
+      "A citation into another PDF activates its tab and Back returns to the previous PDF",
+      "Stop cancels the streaming HTTP request and saves the partial answer",
+      "Retry reuses the frozen question/sources without duplicate user turns",
+      "Sending an identical question again preserves both turns instead of treating it as Retry",
+      "Exhausted quota displays an actionable error without endless retry",
+      "Comparison searches both panes and attaches separately identified manual/datasheet passages",
+      "Conversation questions, answers, citations and renamed title survive app restart",
+      "Local chat storage never includes key and existing Windows encryption remains intact",
+      "Changed source PDFs are marked stale and citation navigation refuses the new content",
+      "Saved conversation can be explicitly selected and deleted"
+    ],
+    "errors": [],
+    "packaged": true
+  },
+  "packagedSourceIntegrity": {
+    "passed": 13,
+    "files": [
+      "electron/main.cjs",
+      "electron/preload.cjs",
+      "electron/chat.cjs",
+      "src/core/ai-providers.mjs",
+      "src/core/translation.mjs",
+      "src/core/chat.mjs",
+      "dist/index.html",
+      "dist/assets/cursor-editorTextHighlight-kG3uUOwL.svg",
+      "dist/assets/index-5zxjRDsz.css",
+      "dist/assets/index-COB-rtoX.js",
+      "dist/assets/pdf.worker-TGcf_-kp.mjs",
+      "dist/assets/pdf_viewer-CBasC8o9.js",
+      "dist/assets/preload-helper-uBIymjUX.js"
+    ]
+  },
+  "artifact": {
+    "path": "E:\\App_RM\\release\\RM-Reader-1.6.0.exe",
+    "bytes": 114747595,
+    "sha256": "10262288E8AF2B95E5E61FF72AF6BABEA0E1A2E121E3FDD61BA24808E01D1E1F"
+  },
+  "limitations": [
+    "Provider integrations were validated using mock API responses, not new providers’ live accounts.",
+    "Only models that support the configured chat API and account permissions can be used.",
+    "Image questions require a model with vision support.",
+    "Other cloud protocols such as AWS Bedrock are not configured directly."
+  ],
+  "source": "C:/Users/ADMIN/OneDrive/Tài liệu/ChatGPT/APP đọc RM",
+  "backup": "E:\\App_RM\\updates\\1.6.0\\original-source"
+}

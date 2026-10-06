@@ -1,0 +1,12 @@
+RM READER 1.7.1 — CTRL+Z QUAY LẠI VỊ TRÍ ĐỌC
+
+Đóng app cũ, mở RM Reader.lnk / Mo_RM_Reader.cmd hoặc
+release\RM-Reader-1.7.1.exe. Kiểm tra v1.7.1 trên thanh tab.
+
+Sau khi nhấp liên kết xanh hoặc mục lục, nhấn Ctrl+Z để trở về vị trí
+trước đó, gồm trang, vị trí cuộn và zoom. Nhấn nhiều lần để đi ngược
+lịch sử. Khi xem Hai PDF, phím đi theo khung bạn đang tương tác.
+
+Alt+← / Alt+→ và Back / Forward trên chuột vẫn hoạt động.
+Trong ô chat, tìm kiếm, nhập liệu và trình sửa văn bản, Ctrl+Z vẫn
+hoàn tác nội dung nhập. Các hộp thoại giữ thao tác riêng của chúng.

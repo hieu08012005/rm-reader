@@ -1,0 +1,18 @@
+RM READER 1.7.0 — MÀU THEO CẤP MỤC LỤC
+
+Đóng bản cũ, mở RM Reader.lnk / Mo_RM_Reader.cmd hoặc
+release\RM-Reader-1.7.0.exe. Kiểm tra v1.7.0 trên thanh tab.
+
+1. Nhấn “Màu theo cấp” ngay dưới tiêu đề Mục lục.
+2. Chọn màu cho từng cấp bằng ô màu, hoặc nhập R, G, B từ 0 đến 255.
+   Cấp 1 là bookmark ngoài cùng; mỗi cấp con thụt vào thêm một bước.
+3. Màu được xem trước trực tiếp, có chữ mẫu bên cạnh các ô RGB.
+4. Nhấn “Lưu màu”. App nhớ màu khi mở lại, dùng chung cho mọi PDF.
+
+App tự hiện các cấp của PDF đang mở. “Thêm cấp” giúp chuẩn bị màu cho
+các tài liệu có nhiều cấp hơn. Màu giữ đúng cấp khi lọc mục lục, thu gọn,
+mở rộng, chọn mục và chuyển giữa các PDF.
+
+“Hủy”, nút × hoặc Esc bỏ thay đổi chưa lưu.
+“Màu mặc định” khôi phục bảng màu xem trước; nhấn “Lưu màu” để lưu lại.
+Màu mục lục được lưu riêng, không thay đổi API key hoặc cấu hình AI.

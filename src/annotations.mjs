@@ -50,9 +50,9 @@ export class AnnotationManager {
     for (const entry of entries) {
       const card = document.createElement('article'); card.className = `annotation-card mark-${entry.color}`;
       const jump = document.createElement('button'); jump.className = 'annotation-jump';
-      const text = document.createElement('strong'); text.textContent = entry.text;
+      const text = document.createElement('strong'); text.textContent = entry.text; text.dataset.userContent = 'true';
       const note = document.createElement('span'); note.textContent = entry.note || `${entry.kind === 'ink' ? 'Nét vẽ' : entry.kind === 'textbox' ? 'Hộp văn bản' : 'Đoạn đã tô màu'} · nhấn để xem trong PDF`;
-      jump.append(text, note); jump.onclick = () => { $('annotations-dialog').close(); this.onJump(entry).catch(this.onError); };
+      if(entry.note)note.dataset.userContent = 'true'; jump.append(text, note); jump.onclick = () => { $('annotations-dialog').close(); this.onJump(entry).catch(this.onError); };
       const footer = document.createElement('div'); footer.className = 'vocabulary-card-footer';
       const source = document.createElement('span'); source.className = 'annotation-origin'; source.textContent = `${entry.documentName} · Trang ${entry.position.page}`;
       const edit = document.createElement('button'); edit.className = 'secondary'; edit.textContent = 'Sửa'; edit.setAttribute('aria-label', `Sửa ghi chú ${entry.text}`); edit.onclick = () => this.edit(entry);

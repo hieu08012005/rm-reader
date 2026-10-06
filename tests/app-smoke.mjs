@@ -100,6 +100,9 @@ try {
   await page.mouse.dblclick(termBox.x + termBox.width/2, termBox.y + termBox.height/2);
   await expect(page.locator('#selection-translate')).toBeVisible({ timeout: 5000 });
   await page.click('#selection-save');
+  await expect(page.locator('#vocabulary-save-dialog')).toBeVisible();
+  await page.click('#vocabulary-save-confirm');
+  await expect(page.locator('#vocabulary-save-dialog')).toBeHidden();
   const untranslatedState = await page.evaluate(() => window.desktop.getState());
   assert.equal(untranslatedState.vocabulary.length, 1);
   assert.equal(untranslatedState.vocabulary[0].translation, '');
@@ -108,6 +111,8 @@ try {
   await expect(page.locator('#translation-result')).toHaveText('ngắt', { timeout: 10000 });
   mark('Real mouse text selection translates embedded term offline');
   await page.click('#save-translated-vocab');
+  await page.click('#vocabulary-save-confirm');
+  await expect(page.locator('#vocabulary-save-dialog')).toBeHidden();
   const translatedState = await page.evaluate(() => window.desktop.getState());
   assert.equal(translatedState.vocabulary.length, 1, 'Saving again updates the meaning without creating duplicate vocab');
   await page.click('#vocabulary-button');
@@ -249,6 +254,8 @@ try {
   await expect(reopenedPage.locator('#translation-result')).toHaveText('thanh ghi');
   await expect(reopenedPage.locator('#selection-save')).toBeVisible();
   await reopenedPage.click('#selection-save');
+  await reopenedPage.click('#vocabulary-save-confirm');
+  await expect(reopenedPage.locator('#vocabulary-save-dialog')).toBeHidden();
   const autoState = await reopenedPage.evaluate(() => window.desktop.getState());
   assert.equal(autoState.vocabulary[0].text, 'register');
   assert.equal(autoState.vocabulary[0].translation, 'thanh ghi');

@@ -1,0 +1,62 @@
+{
+  "version": "1.7.1",
+  "completedAt": "2026-10-05T03:08:51.573Z",
+  "unitTests": {
+    "passed": 85,
+    "failed": 0
+  },
+  "sourceChecks": {
+    "passed": 8,
+    "checks": [
+      "Ctrl+Z after a real blue PDF link restores the original page, scroll and zoom",
+      "Existing Alt+Left and Alt+Right shortcuts retain their history",
+      "Repeated Ctrl+Z follows multiple history entries, handles empty history and leaves Ctrl+Shift+Z alone",
+      "Ctrl+Z performs native Undo in chat and search inputs without moving the PDF",
+      "Dialogs and contenteditable editors keep their own undo behavior",
+      "Ctrl+Z uses the active PDF tab history",
+      "Ctrl+Z follows the focused right PDF from its iframe and from the main toolbar",
+      "No renderer errors during shortcut navigation"
+    ],
+    "errors": []
+  },
+  "packagedChecks": {
+    "passed": 8,
+    "checks": [
+      "Ctrl+Z after a real blue PDF link restores the original page, scroll and zoom",
+      "Existing Alt+Left and Alt+Right shortcuts retain their history",
+      "Repeated Ctrl+Z follows multiple history entries, handles empty history and leaves Ctrl+Shift+Z alone",
+      "Ctrl+Z performs native Undo in chat and search inputs without moving the PDF",
+      "Dialogs and contenteditable editors keep their own undo behavior",
+      "Ctrl+Z uses the active PDF tab history",
+      "Ctrl+Z follows the focused right PDF from its iframe and from the main toolbar",
+      "No renderer errors during shortcut navigation"
+    ],
+    "errors": []
+  },
+  "totalPassed": 101,
+  "packagedSourceIntegrity": {
+    "passed": 13,
+    "files": [
+      "electron/main.cjs",
+      "electron/preload.cjs",
+      "electron/taskbar.cjs",
+      "src/core/outline-colors.mjs",
+      "src/core/ai-providers.mjs",
+      "src/core/translation.mjs",
+      "dist/index.html",
+      "dist/assets/cursor-editorTextHighlight-kG3uUOwL.svg",
+      "dist/assets/index-DDHQd5yZ.css",
+      "dist/assets/index-Dfrwhy9S.js",
+      "dist/assets/pdf.worker-TGcf_-kp.mjs",
+      "dist/assets/pdf_viewer-CBasC8o9.js",
+      "dist/assets/preload-helper-uBIymjUX.js"
+    ]
+  },
+  "artifact": {
+    "path": "E:/App_RM/release/RM-Reader-1.7.1.exe",
+    "bytes": 114748477,
+    "sha256": "D3719060D7AD7445CA8BA50F3FA2EE63D65ADD7753C78791E0CFFBBDC476FD8D"
+  },
+  "source": "C:/Users/ADMIN/OneDrive/Tài liệu/ChatGPT/APP đọc RM",
+  "backup": "E:/App_RM/updates/1.7.1/original-source"
+}

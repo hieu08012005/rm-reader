@@ -4,13 +4,45 @@
 
 ## Mở ứng dụng
 
-Bản đóng gói được đặt trong `E:\App_RM\release`. Đóng phiên bản cũ rồi chạy `RM-Reader-1.5.1.exe`, hoặc `win-unpacked\RM Reader.exe`. Với bản `win-unpacked`, giữ nguyên toàn bộ thư mục đi kèm. Phiên bản hiện ở bên phải thanh tab. Biểu tượng EXE và logo dùng ảnh người dùng cung cấp. Bản 1.2.1 giảm khoảng trống quanh biểu tượng taskbar, giúp phần hình lớn hơn khoảng 25%; ảnh gốc vẫn được giữ nguyên.
+Bản đóng gói được đặt trong `E:\App_RM\release`. Đóng phiên bản cũ rồi chạy `RM-Reader-1.8.0.exe`, hoặc `win-unpacked\RM Reader.exe`. Với bản `win-unpacked`, giữ nguyên toàn bộ thư mục đi kèm. Phiên bản hiện ở bên phải thanh tab. Biểu tượng EXE và logo dùng ảnh người dùng cung cấp. Bản 1.2.1 giảm khoảng trống quanh biểu tượng taskbar, giúp phần hình lớn hơn khoảng 25%; ảnh gốc vẫn được giữ nguyên.
+
+### Giao diện Việt/Anh và học vocab theo folder (1.8.0)
+
+Mở **Cài đặt → Ngôn ngữ giao diện** để chọn Tiếng Việt hoặc English. Lựa chọn áp dụng ngay và được giữ khi mở lại app; nghĩa vocab, bản dịch, văn bản PDF, nội dung chat và tên folder do bạn đặt giữ nguyên.
+
+Khi bôi đen rồi chọn **Lưu vocab**, chọn folder trong app và kiểm tra/bổ sung nghĩa trước khi lưu. Vocab cũ được giữ trong **Chưa phân loại**. Mở biểu tượng quyển sách để tạo/đổi tên folder, thêm từ thủ công hoặc **Sửa / chuyển** từ sang folder khác. Lưu lại cùng từ và PDF trong cùng folder sẽ bổ sung nghĩa, không tạo mục trùng. Folder có từ cần chuyển hết từ trước khi xóa.
+
+Trong danh sách vocab, chọn một folder rồi nhấn **Xuất folder ra PDF** và chọn nơi lưu trên máy. File chỉ chứa các từ của folder đó, gồm cả từ đang bị ẩn bởi ô tìm kiếm; từng từ/ nghĩa có ô riêng, kèm nguồn PDF nếu có, định dạng A4 và số trang. App không có thao tác xuất toàn bộ thư viện.
+
+Chọn folder rồi mở **Flashcard**, **Viết kiểm tra** hoặc **Nối từ với nghĩa**. Flashcard lật từ/nghĩa và tự đánh giá Đã nhớ/Chưa nhớ. Viết kiểm tra cho nghĩa và yêu cầu nhập từ; không phân biệt hoa/thường hoặc khoảng trắng thừa, vẫn phân biệt dấu. Nối từ trộn thứ tự nghĩa, chia lượt tối đa 6 cặp rồi đi tiếp qua folder; từ hoặc nghĩa trùng nhau được bỏ bớt để tránh cặp mơ hồ. Từ chưa có nghĩa không đưa vào bài học. Mỗi phiên tối đa 2.000 từ; kết quả và các từ cần ôn lại được lưu trên máy. Các bài học hoạt động ngoại tuyến.
+
+Kiểm tra với `npm run test:vocabulary`, hoặc `npm run test:vocabulary:packaged` cho bản EXE. Các bài kiểm tra dùng hồ sơ riêng và không gửi yêu cầu AI.
+
+### Ctrl+Z quay lại vị trí đọc (1.7.1)
+
+Sau khi nhấp liên kết xanh hoặc mục lục, nhấn **Ctrl+Z** để quay về vị trí trước đó, gồm trang, cuộn và mức zoom. Có thể nhấn nhiều lần để đi ngược lịch sử của PDF đang đọc. Trong chế độ Hai PDF, phím đi theo khung đang được tương tác, giống Alt+←. Khi con trỏ đang ở ô chat, tìm kiếm, nhập liệu hoặc trình sửa văn bản, Ctrl+Z vẫn hoàn tác văn bản; hộp thoại cũng giữ thao tác của riêng nó.
+
+Kiểm tra với `node tests/navigation-shortcuts-app.mjs`; thêm `--packaged` để chạy trên bản EXE. Bài kiểm tra dùng PDF và hồ sơ riêng.
+
+### Màu theo cấp mục lục (1.7.0)
+
+Nhấn **Màu theo cấp** dưới tiêu đề Mục lục. Cấp 1 là bookmark ngoài cùng; các mục con lần lượt là cấp 2, 3… App tự hiện đủ cấp của PDF đang mở, cùng các cấp đã cấu hình trước đó. Có thể nhấn **Thêm cấp** để chuẩn bị màu cho tài liệu sâu hơn.
+
+Mỗi cấp có ô chọn màu, ba giá trị **R, G, B** (số nguyên từ 0 đến 255) và chữ mẫu. Màu xem trước ngay trong mục lục, gồm cả mục đang chọn và kết quả tìm kiếm. Nhấn **Lưu màu** để lưu trên máy và áp dụng chung cho mọi PDF, kể cả sau khi mở lại app. **Hủy**, nút × hoặc Esc bỏ thay đổi chưa lưu. **Màu mặc định** khôi phục bảng màu mặc định trong phần xem trước; nhấn Lưu màu để xác nhận.
+
+Thử giao diện bằng PDF 8 cấp với `node tests/outline-colors-app.mjs`, hoặc thêm `--packaged` để kiểm tra bản EXE. Kiểm thử dùng hồ sơ riêng và không gửi yêu cầu tới API AI.
+
+### Ghim vào taskbar (1.6.1)
+
+Bản portable giải nén Electron vào thư mục tạm khi chạy. Từ 1.6.1, app đặt thông tin mở lại cho taskbar tới file portable gốc, và đặt AppUserModelID trước khi hiện cửa sổ. Bản `win-unpacked` dùng trực tiếp đường dẫn EXE cố định.
+
+Nếu shortcut đã ghim ở bản cũ báo lỗi, chọn **No** trong hộp thoại, bỏ ghim biểu tượng cũ, mở `E:\App_RM\RM Reader.lnk` hoặc bản portable 1.6.1 rồi ghim lại. Shortcut trong `E:\App_RM` trỏ tới `release\win-unpacked\RM Reader.exe`, nên vẫn dùng đường dẫn đó khi cập nhật tại chỗ. Giữ nguyên thư mục đi kèm; nếu di chuyển app sang nơi khác, cần ghim lại từ vị trí mới.
 
 ## Cách sử dụng
 
 1. Nhấn **Mở PDF** hoặc dấu **+**; giữ Ctrl/Shift để chọn nhiều file trong hộp thoại. Có thể kéo thả nhiều PDF vào cửa sổ. Mỗi file mở trong một tab như các trình đọc PDF thông dụng.
 2. Nhấp chương/mục trong thanh **Mục lục** hoặc liên kết xanh trong PDF để tới vị trí đích.
-3. Nhấn **Back trên chuột**, nút Quay lại, hoặc `Alt + ←` để quay lại đúng vị trí trước đó, gồm vị trí cuộn và mức zoom. `Alt + →` hoặc Forward trên chuột để tiến tới.
+3. Nhấn **Ctrl+Z**, **Back trên chuột**, nút Quay lại, hoặc `Alt + ←` để quay lại đúng vị trí trước đó, gồm vị trí cuộn và mức zoom. `Alt + →` hoặc Forward trên chuột để tiến tới.
 4. Bôi đen từ/đoạn văn rồi nhấn **Dịch sang tiếng Việt**. Kết quả nằm trong bảng bên phải.
 5. `Ctrl + F` để tìm trong PDF; `Enter`/`Shift + Enter` chuyển kết quả. `Ctrl + O` mở tài liệu.
 6. Có thể bật **Tự động dịch khi bôi đen** trong bảng dịch, điều chỉnh chiều rộng bằng vạch giữa PDF và bản dịch, và thay đổi cỡ chữ trong Cài đặt.
@@ -44,7 +76,7 @@ Ghi chú được lưu trong dữ liệu RM Reader trên máy, còn qua khởi �
 
 ## Giữ xuống dòng khi dịch
 
-Văn bản gốc trong bảng dịch giữ tiêu đề, xuống dòng, gạch đầu dòng và thụt dòng. Khi gọi Gemini/Ollama, app bảo vệ ranh giới dòng bằng mã giữ chỗ rồi khôi phục sau khi dịch. Các mục được giữ thành các dòng tương ứng; tên thanh ghi và định danh vẫn được bảo vệ như trước. Nếu model làm mất ranh giới dòng, app báo lỗi để thử lại thay vì gộp toàn bộ danh sách thành một đoạn.
+Văn bản gốc trong bảng dịch giữ tiêu đề, xuống dòng, gạch đầu dòng và thụt dòng. Với mọi dịch vụ, app bảo vệ ranh giới dòng bằng mã giữ chỗ rồi khôi phục sau khi dịch. Các mục được giữ thành các dòng tương ứng; tên thanh ghi và định danh vẫn được bảo vệ như trước. Nếu model làm mất ranh giới dòng, app báo lỗi để thử lại thay vì gộp toàn bộ danh sách thành một đoạn.
 
 ## Tệp đính kèm (Attachments)
 
@@ -71,15 +103,15 @@ Bảng bên phải có hai tab **Bản dịch / Chat AI**. Chuyển tab giữ ng
 
 Tên PDF, phạm vi và trang hiện trước ô nhập. Trong chế độ tìm, số trang chính xác chỉ biết sau khi tìm và được ghi cùng câu hỏi. Tài liệu/trang/đoạn và hội thoại đích được chốt ngay lúc nhấn Gửi; đổi tab hoặc cuộn giữa lúc xử lý không thay nguồn. Các trích đoạn được giới hạn và có thể không bao phủ toàn bộ trang/tài liệu.
 
-Câu trả lời hiển thị dần qua Gemini SSE, hỗ trợ đoạn văn, danh sách, bảng và khối mã có nút sao chép. Model được hướng dẫn giữ tên thanh ghi, bit, địa chỉ, đơn vị; phân biệt nội dung nguồn, suy luận và kiến thức bổ sung; làm rõ W1C/read-to-clear/read-only/reserved và giả định của mã C/C++. Nếu thiếu thông tin, yêu cầu mở rộng phạm vi. Độ chính xác của diễn giải vẫn cần kiểm chứng bằng nguồn; app không bảo đảm mã minh họa chạy trên MCU/SDK chưa xác định.
+Câu trả lời hiển thị dần qua streaming của dịch vụ đã chọn, hỗ trợ đoạn văn, danh sách, bảng và khối mã có nút sao chép. Model được hướng dẫn giữ tên thanh ghi, bit, địa chỉ, đơn vị; phân biệt nội dung nguồn, suy luận và kiến thức bổ sung; làm rõ W1C/read-to-clear/read-only/reserved và giả định của mã C/C++. Nếu thiếu thông tin, yêu cầu mở rộng phạm vi. Độ chính xác của diễn giải vẫn cần kiểm chứng bằng nguồn; app không bảo đảm mã minh họa chạy trên MCU/SDK chưa xác định.
 
 Nguồn có dạng **[tên PDF · Trang N]**. N là trang vật lý PDF; nếu nhãn trang trong tài liệu khác, hiển thị thêm nhãn. Chỉ mã trích dẫn khớp trích đoạn thực sự đã cung cấp cho AI mới có liên kết. Mã do model tự tạo hiện “Nguồn chưa được cung cấp”; câu trả lời thiếu dẫn nguồn hợp lệ có thông báo. Mục **Trích đoạn được cung cấp** cho xem các nguồn kể cả khi model chưa dẫn đúng. Nhấn nguồn kích hoạt đúng tab/khung, nhảy về trang/vùng văn bản và làm nổi bật tạm thời; Back trả về vị trí trước đó, kể cả sang PDF khác. File nguồn bị sửa/di chuyển được đánh dấu cũ và không điều hướng vào phiên bản mới.
 
 Hỏi tiếp gửi các lượt hoàn chỉnh gần nhất trong ngân sách lịch sử 16.000 ký tự; lịch sử quá dài được rút gọn và thông báo. Bản lưu trên máy vẫn giữ toàn bộ câu hỏi, câu trả lời và nguồn. Hội thoại tách theo PDF/cặp PDF; đổi tài liệu mở trạng thái chat mới để tránh trộn. Dùng danh sách phía trên để chủ động mở hội thoại cũ, **Đổi tên**, **Xóa** hoặc **Mới**. Nếu nguồn đang chọn khác bộ tài liệu của hội thoại cũ, câu hỏi mới tạo hội thoại riêng.
 
-Chat AI dùng Gemini API key đã mã hóa, không yêu cầu nhập lại. Trong Cài đặt có **Model Chat AI** riêng (để trống để dùng model cấu hình), giới hạn văn bản PDF mặc định 24.000 ký tự (4.000–64.000), đầu ra mặc định 4.096 token (512–8.192). Tùy chọn model dự phòng áp dụng cho cả chat và dịch; chỉ chọn model được Google liệt kê và hiển thị model thực tế. Lỗi tạm thời thử lại tối đa một lần mỗi model; quota ngày/zero quota không thử lặp trên model đó. Dừng hủy HTTP; giới hạn chờ cả lượt 3 phút. Phản hồi một phần được giữ nếu dừng/mất mạng; Thử lại dùng câu hỏi và nguồn đã chốt. Nếu có usage metadata, hiện token đã dùng, không đoán quota còn lại.
+Chat AI dùng key đã mã hóa của dịch vụ được chọn, không yêu cầu nhập lại. Trong Cài đặt có **Model Chat AI** riêng (để trống để dùng model cấu hình), giới hạn văn bản PDF mặc định 24.000 ký tự (4.000–64.000), đầu ra mặc định 4.096 token (512–8.192). Gemini giữ tùy chọn dự phòng cho cả chat và dịch: chỉ chọn model được Google liệt kê, hiển thị model thực tế; lỗi tạm thời thử lại tối đa một lần mỗi model, quota ngày/zero quota không thử lặp trên model đó. Các dịch vụ khác dùng đúng model đã cấu hình. Dừng hủy HTTP; giới hạn chờ cả lượt 3 phút. Phản hồi một phần được giữ nếu dừng/mất mạng; Thử lại dùng câu hỏi và nguồn đã chốt. Nếu có usage metadata, hiện token đã dùng, không đoán quota còn lại.
 
-PDF, chỉ mục và hội thoại ở trên máy; Gemini nhận câu hỏi, trích đoạn, ảnh được chọn và lịch sử đã giới hạn. API key chỉ giải mã ở backend, không gửi qua IPC/log/lưu chat. Nội dung PDF/attachment là dữ liệu tham khảo, không là chỉ thị. Tìm trong tài liệu vẫn dùng lớp văn bản; hình/scan cần chủ động khoanh vùng để gửi ảnh. Chưa đọc trực tiếp nội dung Excel/Word attachment. PDF đính kèm được mở thành tab thì dùng chat như PDF thông thường.
+PDF, chỉ mục và hội thoại ở trên máy; dịch vụ đã chọn nhận câu hỏi, trích đoạn, ảnh được chọn và lịch sử đã giới hạn. API key đã lưu chỉ giải mã ở backend, không trả về UI/log/lưu chat. Nội dung PDF/attachment là dữ liệu tham khảo, không là chỉ thị. Tìm trong tài liệu vẫn dùng lớp văn bản; hình/scan cần chủ động khoanh vùng để gửi ảnh. Chưa đọc trực tiếp nội dung Excel/Word attachment. PDF đính kèm được mở thành tab thì dùng chat như PDF thông thường.
 
 Giao thức Gemini dùng [API REST streamGenerateContent chính thức](https://ai.google.dev/api/generate-content).
 
@@ -87,14 +119,14 @@ Giao thức Gemini dùng [API REST streamGenerateContent chính thức](https://
 
 - Nhấn **Hỏi hình/bảng** trên thanh công cụ PDF rồi kéo khoanh vùng trên một trang. App mở Chat AI, đặt sẵn câu hỏi “Giải thích hình/bảng này” và hiển thị ảnh xem trước. Hoạt động cả ở khung PDF bên phải và trang scan không có lớp văn bản. Esc hủy thao tác khoanh vùng.
 - Nhấn **Thêm ảnh** để chọn PNG/JPEG, hoặc dán ảnh từ clipboard vào ô nhập. Có thể hỏi chỉ bằng ảnh khi chưa mở PDF.
-- Nhấn ảnh xem trước để xem lớn, dùng **Phóng to 100%** khi cần đọc chữ nhỏ; **Bỏ ảnh** gỡ ảnh chưa gửi. Chỉ nhấn **Gửi** mới gọi Gemini. Có thể viết câu hỏi riêng; để trống câu hỏi với ảnh sẽ dùng “Giải thích hình/bảng này”.
+- Nhấn ảnh xem trước để xem lớn, dùng **Phóng to 100%** khi cần đọc chữ nhỏ; **Bỏ ảnh** gỡ ảnh chưa gửi. Chỉ nhấn **Gửi** mới gọi dịch vụ AI. Có thể viết câu hỏi riêng; để trống câu hỏi với ảnh sẽ dùng “Giải thích hình/bảng này”.
 - Mỗi câu hỏi tối đa 3 ảnh PNG/JPEG, tệp gốc tối đa 12 MB. App tối ưu mỗi ảnh xuống tối đa 2 MB, cạnh dài tối đa 3072 px. Ảnh PDF được dựng lại từ trang gốc ở độ phân giải riêng, không phụ thuộc chất lượng canvas đang hiển thị hay các ghi chú phủ trên PDF.
 - Ảnh vùng PDF lưu tên tài liệu, trang vật lý, nhãn trang, tọa độ vùng và phần văn bản nằm trong vùng nếu có. Nhấn trích dẫn hoặc **Về vùng PDF nguồn** để quay lại vùng đó; Back trở lại chỗ đang đọc. Ảnh ngoài PDF mở ảnh gốc khi nhấn trích dẫn, không tạo trang PDF giả.
 - Mặc định, câu hỏi có ảnh chỉ gửi ảnh đã chọn và văn bản trong vùng ảnh. Bật **Kèm văn bản PDF theo phạm vi đã chọn** để thêm nguồn văn bản theo các tùy chọn Phạm vi/Nguồn. Cuộn hoặc đổi trang sau khi chọn không làm đổi ảnh đã chốt.
 - Ảnh đã gửi lưu riêng trong thư mục dữ liệu app, có ảnh thu nhỏ trong lịch sử và còn sau khi khởi động lại. Hỏi tiếp dùng ảnh trong các lượt hoàn chỉnh gần nhất; lịch sử ảnh giới hạn tối đa 3 ảnh/6 MB, ngoài ảnh của câu hỏi mới. **Thử lại** dùng đúng ảnh đã gửi; **Dùng lại ảnh** đính kèm ảnh cũ vào câu hỏi mới khi cần. Xóa hội thoại xóa ảnh không còn được hội thoại nào tham chiếu.
 - App kiểm tra ảnh nguồn còn nguyên trước khi gửi lại; PDF đã đổi/di chuyển vẫn được đánh dấu nguồn cũ. Không tự gửi toàn bộ trang hoặc mọi hình trong tài liệu. Khi chữ/đường nối không rõ, AI được yêu cầu nêu phần chưa đọc được và đề nghị chọn lại vùng rõ hơn.
 
-Gửi ảnh bằng `inlineData` trong cùng yêu cầu streaming theo [tài liệu Gemini GenerateContent](https://ai.google.dev/api/generate-content); không dùng Files API hoặc dịch vụ OCR riêng.
+Ảnh gửi trong cùng yêu cầu streaming: Gemini dùng `inlineData` theo [GenerateContent](https://ai.google.dev/api/generate-content); OpenAI/DeepSeek/OpenRouter/API tương thích dùng `image_url` data URL theo [OpenAI vision](https://developers.openai.com/api/docs/guides/images-vision); Claude dùng image source base64 theo [Messages](https://platform.claude.com/docs/en/api/messages/create); Ollama dùng trường `images` theo [Chat API](https://docs.ollama.com/api/chat). Cần chọn model hỗ trợ nhận ảnh; không dùng dịch vụ OCR riêng.
 
 ## Thu gọn Chat AI (1.4.1)
 
@@ -222,3 +254,14 @@ Mã nguồn, lockfile, script build, icon, kiểm thử, tài liệu phiên bả
 Kéo vạch dọc ở mép trái bảng bên phải sang trái để mở rộng. Bảng có thể rộng hơn 550 px; giới hạn dựa trên chiều rộng cửa sổ và các bảng đang mở, dành khoảng 300 px cho PDF khi đọc một tài liệu. Khi Hai PDF đang mở, giới hạn dành đủ chỗ cho mỗi khung theo tỷ lệ hiện tại.
 
 App nhớ chiều rộng bạn đã chọn. Khi thu nhỏ cửa sổ hoặc mở thêm bảng bên trái, chiều rộng tự điều chỉnh để vừa cửa sổ; mở rộng cửa sổ lại sẽ khôi phục chiều rộng ưu tiên nếu đủ chỗ. Có thể chọn vạch bằng Tab rồi dùng mũi tên trái/phải để tăng/giảm 20 px.
+## Nhiều nhà cung cấp AI (v1.6.0)
+
+Cài đặt → chọn Gemini, OpenAI, Claude/Anthropic, DeepSeek, OpenRouter, Ollama hoặc API tương thích OpenAI. Nhập API key rồi bấm **Tải danh sách model**; chọn từ gợi ý hoặc nhập model ID trực tiếp (hỗ trợ `vendor/model:free`, model tùy chỉnh/fine-tuned). Model Chat AI để trống sẽ dùng cùng model dịch; có thể chọn model khác của cùng dịch vụ.
+
+Dịch vụ có sẵn tự cấu hình địa chỉ API. Với **API tương thích OpenAI**, nhập Base URL (ví dụ `https://example.com/v1`, LM Studio `http://localhost:1234/v1`); app gọi `/chat/completions` và `/models`. Ollama dùng API riêng `/api/chat`, `/api/tags`, không cần key. HTTP chỉ dùng trên máy cục bộ. Các giao thức cloud khác như Bedrock/Azure đặc thù chưa được cấu hình trực tiếp.
+
+API key giúp xác thực; model vẫn phải hỗ trợ sinh văn bản/chat và tài khoản có quyền/hạn mức. Hỏi ảnh cần model nhận ảnh; danh sách model có thể gồm embeddings/audio không dùng được cho chat. Khi API không hỗ trợ liệt kê model, tự nhập ID vẫn dùng được. App không tự chuyển nhà cung cấp; Gemini giữ tùy chọn model dự phòng.
+
+Key được mã hóa bằng Windows safeStorage, lưu riêng theo dịch vụ; API tùy chỉnh lưu riêng theo Base URL. Đổi dịch vụ nhớ model/địa chỉ lần lưu trước. Key Gemini cũ vẫn dùng được; key không xuất hiện trong settings gửi về UI hoặc mã nguồn. Dịch vụ đã chọn nhận đoạn văn/ảnh đã gửi và lịch sử trong giới hạn cấu hình; PDF gốc vẫn trên máy.
+
+Kiểm tra: `npm test`, `npm run test:ai-providers`, `npm run test:chat-images` và các bản `:packaged`. Giao thức nhà cung cấp mới được kiểm thử bằng phản hồi mô phỏng; không tuyên bố đã kiểm thử tài khoản thật khi chưa có API key của dịch vụ đó.

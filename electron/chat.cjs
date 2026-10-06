@@ -74,7 +74,7 @@ module.exports=async function({app,handle,documents,registerPdf,getWindow,getSet
       }
     }
     // API key is decrypted here only, never exposed through IPC or stored with messages.
-    const apiKey=getApiKey();
+    const apiKey=getApiKey(settings);
     const user={id:randomUUID(),role:'user',text:question,sources,scope:String(input.scope||'').slice(0,100),createdAt:Date.now()};
     const history=input.retry?c.messages.slice(0,-2):c.messages;
     const built=buildChatContents(history,user,16000);

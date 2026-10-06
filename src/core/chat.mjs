@@ -1,4 +1,5 @@
 import { describeProviderError } from './translation.mjs';
+import { streamAI } from './ai-providers.mjs';
 import { MAX_CHAT_IMAGES, MAX_HISTORY_IMAGE_BYTES } from './chat-images.mjs';
 
 export const CHAT_INSTRUCTIONS = `Bạn là Trợ lý lập trình nhúng của RM Reader. Trả lời bằng tiếng Việt, dùng Markdown, ưu tiên MCU, C/C++, RTOS, clock, DMA, ngắt, bộ nhớ và ngoại vi.
@@ -51,6 +52,7 @@ export function buildChatContents(messages,current,budget=16000) {
 }
 const wait=(ms,signal)=>new Promise((resolve,reject)=>{const stop=()=>{clearTimeout(timer);reject(new Error('Đã dừng trả lời.'));};const timer=setTimeout(()=>{signal?.removeEventListener('abort',stop);resolve();},ms);if(signal?.aborted)stop();else signal?.addEventListener('abort',stop,{once:true});});
 export async function streamChat({apiKey,settings,contents,signal,fetchImpl=fetch,onEvent=()=>{},waitImpl=wait}) {
+  if (settings.provider && settings.provider !== 'gemini') return streamAI({apiKey,settings,contents,signal,fetchImpl,onEvent,system:CHAT_INSTRUCTIONS});
   if(!apiKey)throw new Error('Chưa có Gemini API key. Mở Cài đặt để cấu hình key; Chat AI dùng key Gemini đã lưu.');
   let model=settings.chatModel||settings.model,attempt=0,fallback=false;
   const headers={'Content-Type':'application/json','x-goog-api-key':apiKey};

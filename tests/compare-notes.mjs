@@ -79,7 +79,7 @@ try {
   mark('Selections in the right PDF save notes to that PDF and repaint both panes');
   // Shared translation/vocab must retain the right-hand document as source.
   await right.evaluate(() => window.rmTest.translate('register')); await expect(page.locator('#translation-result')).toHaveText('thanh ghi');
-  await page.click('#save-translated-vocab'); const vocab = (await page.evaluate(() => window.desktop.getState())).vocabulary[0];
+  await page.click('#save-translated-vocab'); await expect(page.locator('#vocabulary-save-dialog')).toBeVisible(); await page.click('#vocabulary-save-confirm'); await expect(page.locator('#vocabulary-save-dialog')).toBeHidden(); const vocab = (await page.evaluate(() => window.desktop.getState())).vocabulary[0];
   assert.equal(vocab.documentId, state.annotations[0].documentId); assert.equal(vocab.translation, 'thanh ghi');
   mark('Right pane translation uses the shared Vietnamese panel and saves the correct vocab source');
   await page.click('#translation-close');

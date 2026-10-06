@@ -1,0 +1,21 @@
+RM READER 1.6.1 — SỬA SHORTCUT TASKBAR
+
+Nguyên nhân: bản portable chạy Electron từ thư mục giải nén tạm. Shortcut
+của bản cũ có thể trỏ tới RM Reader.exe trong thư mục này; sau khi đóng
+app, thư mục bị dọn nên Windows báo không tìm thấy chương trình.
+
+Bản 1.6.1 đặt đường dẫn mở lại và biểu tượng taskbar tới file portable gốc,
+hoặc EXE cố định khi chạy win-unpacked, trước khi hiển thị cửa sổ.
+
+Cách dùng:
+1. Đóng app cũ. Nếu thấy hộp thoại lỗi shortcut, chọn No.
+2. Nhấn chuột phải biểu tượng cũ trên taskbar → Unpin from taskbar.
+3. Mở E:\App_RM\RM Reader.lnk rồi ghim lại (Pin to taskbar).
+   Shortcut này trỏ tới release\win-unpacked\RM Reader.exe.
+4. Đóng app và mở lại từ biểu tượng vừa ghim.
+
+Cũng có thể chạy release\RM-Reader-1.6.1.exe rồi ghim cửa sổ đó.
+Giữ file portable ở vị trí cố định. Với win-unpacked, giữ nguyên toàn bộ
+thư mục; nếu di chuyển app, bỏ ghim và ghim lại từ vị trí mới.
+
+Các cấu hình, API key và hội thoại của bạn vẫn sử dụng dữ liệu cũ.

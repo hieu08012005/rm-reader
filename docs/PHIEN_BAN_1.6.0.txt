@@ -1,0 +1,31 @@
+RM READER 1.6.0 — NHIỀU DỊCH VỤ AI VÀ MODEL TÙY CHỈNH
+
+Đóng app cũ rồi chạy release\RM-Reader-1.6.0.exe hoặc Mo_RM_Reader.cmd.
+
+1. Mở Cài đặt AI và bản dịch (nút bánh răng).
+2. Chọn Gemini, OpenAI, Claude/Anthropic, DeepSeek, OpenRouter,
+   Ollama hoặc API tương thích OpenAI.
+3. Nhập API key của dịch vụ này. Key Gemini đã lưu từ bản cũ vẫn dùng được.
+4. Bấm Tải danh sách model, chọn tên trong gợi ý hoặc tự nhập model ID.
+5. Model Chat AI để trống sẽ dùng cùng model dịch; có thể chọn riêng model chat.
+6. Nhấn Lưu cài đặt.
+
+Dịch vụ có sẵn tự điền địa chỉ API. Dịch vụ tùy chỉnh cần Base URL
+(ví dụ https://example.com/v1; LM Studio http://localhost:1234/v1).
+App hỗ trợ API chat/completions tương thích OpenAI; không thể chỉ dựa vào
+API key để tự nhận diện mọi giao thức cloud. Ollama chạy cục bộ không cần key.
+
+Model phải có quyền/hạn mức và hỗ trợ sinh văn bản. Hỏi hình/bảng cần model
+nhận ảnh. Danh sách API có thể gồm model embeddings/audio không dùng cho chat.
+Nếu API không hỗ trợ tải danh sách, tự nhập tên model trực tiếp vẫn được.
+
+Mỗi dịch vụ lưu key được mã hóa riêng bằng Windows; dịch vụ tùy chỉnh lưu
+theo Base URL. Không gửi key của Gemini sang nhà cung cấp khác. Đổi dịch vụ
+nhớ model đã lưu. Tùy chọn model dự phòng chỉ áp dụng cho Gemini.
+
+Bản dịch, hỏi ảnh/sơ đồ/bảng, liên kết nguồn PDF và nút Dừng/Thử lại được giữ.
+Dịch vụ được chọn nhận phần văn bản/ảnh và lịch sử đã gửi theo giới hạn cấu hình.
+
+Giao thức nhà cung cấp mới được kiểm thử bằng phản hồi mô phỏng trong app;
+chưa xác minh bằng tài khoản thật của các dịch vụ chưa được cung cấp key.
+Xem KET_QUA_KIEM_THU_1.6.0.json để biết kết quả kiểm tra cụ thể.

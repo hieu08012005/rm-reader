@@ -74,7 +74,7 @@ export class AttachmentManager {
       const text=document.createElement('span');text.textContent=entry.name;title.append(text);title.title=entry.name;
       title.disabled=this.busy || !canOpenAttachment(entry.name);title.onclick=()=>this.open(entry,source);
       const type=document.createElement('span');type.className='attachment-type';type.textContent=attachmentLabel(entry.name);
-      const description=document.createElement('p');description.className='attachment-description';description.textContent=entry.description || 'Không có mô tả';
+      const description=document.createElement('p');description.className='attachment-description';description.textContent=entry.description || 'Không có mô tả'; if(entry.description)description.dataset.userContent='true';
       const actions=document.createElement('div');actions.className='attachment-actions';
       const open=document.createElement('button');open.className='secondary';open.textContent='Mở';open.disabled=title.disabled;open.setAttribute('aria-label',`Mở ${entry.name}`);open.onclick=()=>this.open(entry,source);
       if(!canOpenAttachment(entry.name))open.title='Loại tệp này hỗ trợ lưu ra máy';

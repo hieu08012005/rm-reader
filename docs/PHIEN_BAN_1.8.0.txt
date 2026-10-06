@@ -1,0 +1,31 @@
+RM READER 1.8.0 — NGÔN NGỮ, FOLDER VOCAB VÀ ÔN TẬP
+
+Đóng bản app cũ, mở RM Reader.lnk hoặc release\win-unpacked\RM Reader.exe.
+Bản portable: release\RM-Reader-1.8.0.exe. Kiểm tra v1.8.0 trên thanh tab.
+
+1. Cài đặt → Ngôn ngữ giao diện → Tiếng Việt hoặc English.
+   Áp dụng ngay, lưu khi khởi động lại. Nghĩa vocab/bản dịch giữ nguyên.
+
+2. Bôi đen từ trong PDF → Lưu vocab → chọn folder → kiểm tra nghĩa → Lưu.
+   Folder là thư mục phân loại trong app, ví dụ GPIO, UART hoặc từng bài học.
+   Vocab cũ giữ trong Chưa phân loại.
+
+3. Mở biểu tượng quyển sách → chọn folder.
+   Tạo thư mục, Đổi tên, Thêm từ, Sửa / chuyển hỗ trợ quản lý từng bài.
+   Folder có từ cần chuyển hết từ sang folder khác trước khi xóa.
+   Nhấn tên PDF trong một từ để về đúng vị trí gốc.
+
+4. Xuất folder ra PDF → chọn tên và nơi lưu trên máy.
+   Chỉ xuất folder đang chọn, không xuất tất cả các folder.
+   Ô tìm kiếm không làm thay đổi các từ của folder được xuất.
+   PDF A4 có ô từ/nghĩa tách rõ, nguồn PDF nếu có và số trang.
+
+5. Ba chế độ ôn tập theo folder:
+   - Flashcard: lật để hiện nghĩa, chọn Đã nhớ hoặc Chưa nhớ.
+   - Viết kiểm tra: nhìn nghĩa và viết từ, Kiểm tra rồi Từ tiếp theo.
+     Không phân biệt hoa/thường hay khoảng trắng thừa; vẫn phân biệt dấu.
+   - Nối từ với nghĩa: chọn từ bên trái và nghĩa bên phải; tối đa 6 cặp/lượt,
+     hoàn thành lượt để sang các từ tiếp theo trong folder.
+   Từ chưa có nghĩa được bỏ qua. Nối từ bỏ bớt từ/nghĩa trùng để tránh mơ hồ.
+   Mỗi phiên tối đa 2.000 từ. Kết quả đúng/sai được lưu để xem lại.
+   Học vocab không cần gọi API AI.

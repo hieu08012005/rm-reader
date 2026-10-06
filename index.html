@@ -16,7 +16,7 @@
     <button id="toggle-attachments" class="icon-button" title="Tệp đính kèm trong PDF" aria-label="Tệp đính kèm" aria-pressed="false"><i data-icon="attachment"></i></button>
     <span class="separator"></span>
     <div id="primary-controls" class="reader-controls">
-    <button id="back" class="icon-button" title="Quay lại · Alt+← / Back trên chuột" aria-label="Quay lại" disabled><i data-icon="back"></i></button>
+    <button id="back" class="icon-button" title="Quay lại · Ctrl+Z / Alt+← / Back trên chuột" aria-label="Quay lại" disabled><i data-icon="back"></i></button>
     <button id="forward" class="icon-button" title="Tiến tới · Alt+→ / Forward trên chuột" aria-label="Tiến tới" disabled><i data-icon="forward"></i></button>
     <div class="page-control"><input id="page-number" type="number" min="1" value="1" aria-label="Trang hiện tại" disabled><span>/ <b id="page-count">—</b></span></div>
     <span class="separator"></span>
@@ -50,9 +50,10 @@
   <main id="workspace">
     <aside id="outline-panel">
       <div class="panel-heading"><div><span class="eyebrow">ĐIỀU HƯỚNG</span><h2>Mục lục</h2></div><button id="outline-close" class="icon-button" aria-label="Đóng mục lục"><i data-icon="sidebar"></i></button></div>
+      <button id="outline-colors-button" class="secondary"><span class="outline-palette" aria-hidden="true"></span>Màu theo cấp</button>
       <div class="outline-search"><i data-icon="search"></i><input id="outline-filter" placeholder="Tìm chương, mục…" aria-label="Tìm trong mục lục"></div>
       <nav id="outline-tree" aria-label="Mục lục tài liệu"><p class="empty-note">Mục lục sẽ xuất hiện khi bạn mở tài liệu PDF.</p></nav>
-      <div class="sidebar-tip"><i data-icon="mouse"></i><span>Nhấp liên kết để đi tới.<br><b>Back trên chuột</b> để quay lại.</span></div>
+      <div class="sidebar-tip"><i data-icon="mouse"></i><span>Nhấp liên kết để đi tới.<br><b>Ctrl+Z / Back trên chuột</b> để quay lại.</span></div>
     </aside>
     <aside id="attachments-panel" hidden aria-label="Tệp đính kèm trong PDF">
       <div class="panel-heading"><div><span class="eyebrow">ATTACHMENTS</span><h2>Tệp đính kèm <span id="attachments-count"></span></h2></div><button id="attachments-close" class="icon-button" aria-label="Đóng tệp đính kèm"><i data-icon="close"></i></button></div>
@@ -117,7 +118,7 @@
           <button id="chat-close" class="icon-button" aria-label="Đóng Chat AI"><i data-icon="close"></i></button>
         </div>
         <div id="chat-conversation-details">
-        <div class="chat-heading"><div><span class="eyebrow">GEMINI · TIẾNG VIỆT</span><h2>Trợ lý lập trình nhúng</h2></div></div>
+        <div class="chat-heading"><div><span class="eyebrow" id="chat-provider-label">GEMINI · TIẾNG VIỆT</span><h2>Trợ lý lập trình nhúng</h2></div></div>
         <div class="chat-history-controls"><select id="chat-history" aria-label="Hội thoại đã lưu"><option value="">Cuộc trò chuyện mới</option></select><button id="chat-new" title="Cuộc trò chuyện mới">Mới</button><button id="chat-rename" title="Đổi tên hội thoại">Đổi tên</button><button id="chat-delete" title="Xóa hội thoại">Xóa</button></div>
         </div>
         <div id="chat-messages" aria-label="Tin nhắn Chat AI" role="log"></div>
@@ -141,22 +142,37 @@
       </section>
     </aside>
   </main>
-  <footer class="statusbar"><span id="reader-status"><span class="status-dot"></span>Sẵn sàng mở tài liệu</span><span>Bôi đen → Dịch <span class="footer-divider">|</span> Alt + ← / → để điều hướng</span></footer>
+  <footer class="statusbar"><span id="reader-status"><span class="status-dot"></span>Sẵn sàng mở tài liệu</span><span>Bôi đen → Dịch <span class="footer-divider">|</span> Ctrl+Z quay lại · Alt + ← / → điều hướng</span></footer>
   <div id="selection-tools" class="selection-tools" hidden><button id="selection-translate"><i data-icon="translate"></i>Dịch sang tiếng Việt</button><button id="selection-ai"><i data-icon="chip"></i>Hỏi AI</button><button id="selection-save"><i data-icon="book"></i>Lưu vocab</button><button id="selection-note"><i data-icon="highlight"></i>Đánh dấu / Ghi chú</button></div>
   <div id="toast" role="status" hidden></div>
+  <dialog id="outline-colors-dialog" aria-labelledby="outline-colors-heading">
+    <form id="outline-colors-form">
+      <div class="dialog-heading"><h2 id="outline-colors-heading">Màu theo cấp mục lục</h2><button type="button" id="outline-colors-close" class="icon-button" aria-label="Đóng chọn màu mục lục"><i data-icon="close"></i></button></div>
+      <p class="dialog-intro">Cấp 1 là mục ngoài cùng; mỗi cấp con thụt vào thêm một bước. Chọn màu hoặc nhập R, G, B (0–255). Màu dùng chung cho mọi PDF và được lưu khi nhấn Lưu màu.</p>
+      <div id="outline-color-levels"></div>
+      <div class="outline-color-tools"><button type="button" id="outline-colors-add" class="secondary">Thêm cấp</button><button type="button" id="outline-colors-reset" class="secondary">Màu mặc định</button></div>
+      <p id="outline-colors-error" class="error-text" role="alert"></p>
+      <div class="dialog-actions"><button type="button" id="outline-colors-cancel" class="secondary">Hủy</button><button type="submit" id="outline-colors-save" class="primary">Lưu màu</button></div>
+    </form>
+  </dialog>
   <dialog id="settings-dialog">
     <form id="settings-form">
-      <div class="dialog-heading"><div><span class="eyebrow">CÁ NHÂN HÓA</span><h2>Cài đặt dịch</h2></div><button type="button" id="settings-close" class="icon-button" aria-label="Đóng cài đặt"><i data-icon="close"></i></button></div>
-      <p class="dialog-intro">Từ điển thuật ngữ nhúng dùng được ngay. Để dịch đoạn văn, chọn dịch vụ bên dưới.</p>
-      <label class="field">Dịch vụ dịch<select id="provider"><option value="gemini">Google Gemini</option><option value="ollama">Ollama · chạy trên máy này</option></select></label>
+      <div class="dialog-heading"><div><span class="eyebrow">CÁ NHÂN HÓA</span><h2>Cài đặt AI và bản dịch</h2></div><button type="button" id="settings-close" class="icon-button" aria-label="Đóng cài đặt"><i data-icon="close"></i></button></div>
+      <label class="field" id="ui-language-field">Ngôn ngữ giao diện<select id="ui-language" data-user-content="true"><option value="vi">Tiếng Việt</option><option value="en">English</option></select></label>
+      <p class="field-hint">Đổi ngôn ngữ giao diện ngay; từ vựng và bản dịch đã lưu giữ nguyên.</p>
+      <p class="dialog-intro">Chọn dịch vụ cho cả bản dịch và Chat AI. Nhập key, tải danh sách hoặc tự nhập tên model.</p>
+      <label class="field">Nhà cung cấp AI<select id="provider"><option value="gemini">Google Gemini</option><option value="openai">OpenAI</option><option value="anthropic">Claude · Anthropic</option><option value="deepseek">DeepSeek</option><option value="openrouter">OpenRouter</option><option value="custom">API tương thích OpenAI · tùy chỉnh</option><option value="ollama">Ollama · chạy trên máy này</option></select></label>
       <div id="gemini-settings"><label class="field">API key<input id="api-key" type="password" autocomplete="off" placeholder="Nhập Gemini API key"></label><p class="field-hint" id="key-status">API key được mã hóa bằng tài khoản Windows của bạn.</p><button id="get-api-key" type="button" class="text-button">Lấy API key tại Google AI Studio ↗</button><label class="check-label"><input id="clear-key" type="checkbox">Xóa API key đã lưu</label></div>
-      <div id="ollama-settings" hidden><label class="field">Địa chỉ Ollama<input id="endpoint" type="url" value="http://127.0.0.1:11434"></label><p class="field-hint">Cần cài Ollama và tải model có khả năng dịch tiếng Việt trước.</p></div>
-      <label class="field">Tên model<input id="model" required placeholder="gemini-3.8-flash"></label>
-      <label class="field">Model Chat AI (Gemini)<input id="chat-model" placeholder="Để trống để dùng model đã cấu hình"></label>
+      <div id="ollama-settings" hidden><label class="field"><span id="endpoint-label">Địa chỉ Ollama</span><input id="endpoint" type="url" value="http://127.0.0.1:11434" placeholder="https://example.com/v1"></label><p class="field-hint" id="endpoint-hint">Cần cài Ollama và tải model trước.</p></div>
+      <button id="load-models" type="button" class="secondary">Tải danh sách model</button><p id="model-list-status" class="field-hint" role="status"></p>
+      <datalist id="ai-models"></datalist>
+      <label class="field">Tên model dịch<input id="model" list="ai-models" required placeholder="Nhập đúng model ID của dịch vụ"></label>
+      <label class="field">Model Chat AI<input id="chat-model" list="ai-models" placeholder="Để trống để dùng cùng model dịch"></label>
+      <p class="field-hint">Có thể nhập model bất kỳ mà tài khoản có quyền gọi. Hỏi hình/bảng cần model có khả năng đọc ảnh.</p>
       <div class="chat-settings-limits"><label class="field">Ngữ cảnh PDF tối đa (ký tự)<input id="chat-context-limit" type="number" min="4000" max="64000" step="1000" value="24000"></label><label class="field">Đầu ra tối đa (token)<input id="chat-output-limit" type="number" min="512" max="8192" step="512" value="4096"></label></div>
       <label class="check-label" style="margin-top:12px"><input id="auto-fallback" type="checkbox" checked>Tự dùng model Gemini dự phòng khi quá tải/hết hạn mức</label>
       <label class="field">Cỡ chữ bản dịch<select id="translation-font"><option value="14">14 px</option><option value="16">16 px</option><option value="18">18 px</option><option value="20">20 px</option><option value="24">24 px</option></select></label>
-      <div class="settings-note"><i data-icon="chip"></i><p>Bản dịch và Chat AI ưu tiên nghĩa kỹ thuật nhúng. Gemini nhận đoạn dịch hoặc trích đoạn PDF và lịch sử chat trong giới hạn đã cấu hình. PDF và chỉ mục văn bản ở trên máy bạn. Chat AI luôn dùng Gemini API key đã lưu.</p></div>
+      <div class="settings-note"><i data-icon="chip"></i><p>Dịch vụ đã chọn nhận đoạn dịch, trích đoạn PDF, ảnh đính kèm và lịch sử chat trong giới hạn cấu hình. PDF gốc ở trên máy bạn. Mỗi dịch vụ lưu key riêng; API tùy chỉnh lưu key riêng theo Base URL.</p></div>
       <p id="settings-error" class="error-text" role="alert"></p>
       <div class="dialog-actions"><button type="button" id="settings-cancel" class="secondary">Hủy</button><button type="submit" class="primary">Lưu cài đặt</button></div>
     </form>
@@ -174,10 +190,22 @@
   <dialog id="annotations-dialog" aria-labelledby="annotations-heading"><div class="dialog-heading"><div><span class="eyebrow">CÁC ĐOẠN ĐÃ ĐÁNH DẤU</span><h2 id="annotations-heading">Ghi chú của tôi <span id="annotations-count"></span></h2></div><button id="annotations-close" class="icon-button" aria-label="Đóng danh sách ghi chú"><i data-icon="close"></i></button></div><p class="dialog-intro">Nhấn ghi chú để quay về đoạn gốc. Bạn có thể sửa nội dung hoặc đổi màu bất cứ lúc nào.</p><label class="vocabulary-search"><i data-icon="search"></i><input id="annotations-filter" type="search" placeholder="Tìm đoạn văn, ghi chú hoặc tên PDF…" aria-label="Tìm ghi chú"></label><div id="annotations-list"></div></dialog>
   <dialog id="vocabulary-dialog" aria-labelledby="vocabulary-heading">
     <div class="dialog-heading"><div><span class="eyebrow">ÔN LẠI THUẬT NGỮ NHÚNG</span><h2 id="vocabulary-heading">Vocab của tôi <span id="vocabulary-count"></span></h2></div><button id="vocabulary-close" class="icon-button" aria-label="Đóng danh sách vocab"><i data-icon="close"></i></button></div>
-    <p class="dialog-intro">Lưu từ hoặc đoạn bôi đen để xem lại. Nhấn tên tài liệu để quay về trang nguồn.</p>
+    <p class="dialog-intro">Chọn thư mục để xem, xuất PDF hoặc học từ. Nhấn tên tài liệu để quay về trang nguồn.</p>
+    <div class="vocabulary-folder-bar"><label class="field">Thư mục vocab<select id="vocabulary-folder" aria-label="Thư mục vocab"></select></label><div class="vocabulary-folder-actions"><button id="vocabulary-folder-new" class="secondary">Tạo thư mục</button><button id="vocabulary-folder-rename" class="secondary">Đổi tên</button><button id="vocabulary-folder-delete" class="secondary">Xóa thư mục trống</button></div></div>
+    <p id="vocabulary-folder-summary" class="field-hint"></p>
+    <div class="vocabulary-library-actions"><button id="vocabulary-add" class="secondary">Thêm từ</button><button id="vocabulary-export" class="secondary">Xuất thư mục ra PDF</button><button id="vocabulary-flashcards" class="primary">Flashcard</button><button id="vocabulary-typing" class="secondary">Viết kiểm tra từ</button><button id="vocabulary-matching" class="secondary">Nối từ với nghĩa</button></div>
     <label class="vocabulary-search"><i data-icon="search"></i><input id="vocabulary-filter" type="search" placeholder="Tìm từ, nghĩa tiếng Việt hoặc tên PDF…" aria-label="Tìm vocab"></label>
     <div id="vocabulary-list"></div><p id="vocabulary-error" class="error-text" role="alert"></p>
   </dialog>
+  <dialog id="vocabulary-save-dialog" aria-labelledby="vocabulary-save-heading"><form id="vocabulary-save-form">
+    <div class="dialog-heading"><h2 id="vocabulary-save-heading">Lưu vocab</h2><button type="button" id="vocabulary-save-close" class="icon-button" aria-label="Đóng lưu vocab"><i data-icon="close"></i></button></div>
+    <label class="field">Từ hoặc cụm từ<textarea id="vocabulary-word" rows="2" maxlength="12000" required></textarea></label>
+    <label class="field">Nghĩa / ghi chú<textarea id="vocabulary-meaning" rows="4" maxlength="24000" placeholder="Nhập nghĩa để dùng trong flashcard và bài kiểm tra"></textarea></label>
+    <label class="field">Lưu vào thư mục<select id="vocabulary-save-folder" required aria-label="Lưu vào thư mục"></select></label><button type="button" id="vocabulary-save-new-folder" class="text-button">Tạo thư mục mới</button>
+    <p id="vocabulary-save-error" class="error-text" role="alert"></p><div class="dialog-actions"><button type="button" id="vocabulary-save-cancel" class="secondary">Hủy</button><button type="submit" id="vocabulary-save-confirm" class="primary">Lưu vocab</button></div>
+  </form></dialog>
+  <dialog id="vocabulary-folder-dialog" aria-labelledby="vocabulary-folder-heading"><form id="vocabulary-folder-form"><div class="dialog-heading"><h2 id="vocabulary-folder-heading">Tạo thư mục</h2><button type="button" id="vocabulary-folder-close" class="icon-button" aria-label="Đóng thư mục"><i data-icon="close"></i></button></div><label class="field">Tên thư mục<input id="vocabulary-folder-name" required maxlength="80" autocomplete="off"></label><p id="vocabulary-folder-error" class="error-text" role="alert"></p><div class="dialog-actions"><button type="button" id="vocabulary-folder-cancel" class="secondary">Hủy</button><button type="submit" class="primary">Lưu thư mục</button></div></form></dialog>
+  <dialog id="vocabulary-study-dialog" aria-labelledby="vocabulary-study-heading"><div class="dialog-heading"><div><span class="eyebrow">HỌC TỪ VỰNG</span><h2 id="vocabulary-study-heading">Ôn tập vocab</h2><p id="vocabulary-study-folder"></p></div><button id="vocabulary-study-close" class="icon-button" aria-label="Đóng bài học"><i data-icon="close"></i></button></div><div class="vocabulary-study-tools"><select id="vocabulary-study-mode" aria-label="Chế độ học"><option value="flashcards">Flashcard</option><option value="typing">Viết kiểm tra từ</option><option value="matching">Nối từ với nghĩa</option></select><button id="vocabulary-study-restart" class="secondary">Lượt mới</button><span id="vocabulary-study-counter"></span></div><progress id="vocabulary-study-progress" max="1" value="0"></progress><p id="vocabulary-study-note" class="field-hint"></p><div id="vocabulary-study-body"></div><p id="vocabulary-study-result" role="status"></p><p id="vocabulary-study-error" class="error-text" role="alert"></p></dialog>
   <script type="module" src="/src/app.mjs"></script>
   <dialog id="chat-title-dialog"><form id="chat-title-form"><h2>Đổi tên hội thoại</h2><label class="field">Tên<input id="chat-title" maxlength="120" required></label><div class="dialog-actions"><button id="chat-title-cancel" type="button" class="secondary">Hủy</button><button type="submit" class="primary">Lưu</button></div></form></dialog>
   <dialog id="chat-image-dialog" aria-labelledby="chat-image-heading"><div class="dialog-heading"><h2 id="chat-image-heading">Xem ảnh</h2><button id="chat-image-close" type="button" class="icon-button" aria-label="Đóng ảnh"><i data-icon="close"></i></button></div><p id="chat-image-caption"></p><button id="chat-image-zoom" type="button" class="text-button" aria-pressed="false">Phóng to 100%</button><div id="chat-image-viewport"><img id="chat-image-large" alt="Ảnh đính kèm để hỏi AI"></div></dialog>

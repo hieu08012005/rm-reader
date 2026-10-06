@@ -1,0 +1,102 @@
+{
+  "version": "1.6.1",
+  "completedAt": "2026-10-05T02:33:52.010Z",
+  "unitTests": {
+    "passed": 82,
+    "failed": 0
+  },
+  "taskbar": {
+    "checks": [
+      "Windows native taskbar properties point to the stable unpacked executable",
+      "Workspace shortcut has the correct app identity and its target survives closing",
+      "Windows native taskbar properties use the original portable launcher when NSIS supplies its path",
+      "Packaged application restarts successfully after closing"
+    ],
+    "passed": 4,
+    "fixed": {
+      "keys": "9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3:5;9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3:3;9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3:2;9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3:4;",
+      "relaunchCommand": "\"E:\\App_RM\\release\\win-unpacked\\RM Reader.exe\"",
+      "relaunchIcon": "E:\\App_RM\\release\\win-unpacked\\RM Reader.exe,0",
+      "relaunchDisplayName": "RM Reader",
+      "appId": "vn.rmreader.desktop"
+    },
+    "portable": {
+      "keys": "9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3:5;9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3:3;9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3:2;9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3:4;",
+      "relaunchCommand": "\"E:\\App_RM\\release\\RM-Reader-1.6.1.exe\"",
+      "relaunchIcon": "E:\\App_RM\\release\\RM-Reader-1.6.1.exe,0",
+      "relaunchDisplayName": "RM Reader",
+      "appId": "vn.rmreader.desktop"
+    },
+    "shortcut": {
+      "target": "E:\\App_RM\\release\\win-unpacked\\RM Reader.exe",
+      "cwd": "E:\\App_RM\\release\\win-unpacked",
+      "args": "",
+      "description": "RM Reader — đọc tài liệu nhúng",
+      "icon": "E:\\App_RM\\release\\win-unpacked\\RM Reader.exe",
+      "iconIndex": 0,
+      "appUserModelId": "vn.rmreader.desktop",
+      "toastActivatorClsid": ""
+    }
+  },
+  "realPortable": {
+    "checks": [
+      "Real NSIS portable launches and Windows relaunch command targets its original file",
+      "Real NSIS portable launches again after the first instance and temporary files are closed"
+    ],
+    "passed": 2,
+    "portablePath": "E:\\App_RM\\release\\RM-Reader-1.6.1.exe"
+  },
+  "providers": {
+    "passed": 15,
+    "checks": [
+      "Legacy Gemini encrypted key migrates without asking for the key again",
+      "Settings offers seven providers with model picker and manual entry",
+      "openai: model listing, isolated key, encrypted save and native image chat with citations",
+      "anthropic: model listing, isolated key, encrypted save and native image chat with citations",
+      "deepseek: model listing, isolated key, encrypted save and native image chat with citations",
+      "openrouter: model listing, isolated key, encrypted save and native image chat with citations",
+      "custom: model listing, isolated key, encrypted save and native image chat with citations",
+      "ollama: model listing, isolated key, encrypted save and native image chat with citations",
+      "Switching back restores provider model and saved key status",
+      "All provider keys are encrypted on disk; Gemini key remains intact",
+      "Changing custom Base URL never sends an existing provider/endpoint key",
+      "Provider profiles and encrypted keys survive app restart",
+      "Custom key status recognizes an earlier saved endpoint after switching URLs",
+      "Clearing one key preserves the keys of other providers",
+      "No frontend errors across provider switches, chats and restart"
+    ],
+    "errors": []
+  },
+  "totalPassed": 103,
+  "packagedSourceIntegrity": {
+    "passed": 14,
+    "files": [
+      "electron/main.cjs",
+      "electron/taskbar.cjs",
+      "electron/preload.cjs",
+      "electron/chat.cjs",
+      "src/core/ai-providers.mjs",
+      "src/core/translation.mjs",
+      "src/core/chat.mjs",
+      "dist/index.html",
+      "dist/assets/cursor-editorTextHighlight-kG3uUOwL.svg",
+      "dist/assets/index-5zxjRDsz.css",
+      "dist/assets/index-COB-rtoX.js",
+      "dist/assets/pdf.worker-TGcf_-kp.mjs",
+      "dist/assets/pdf_viewer-CBasC8o9.js",
+      "dist/assets/preload-helper-uBIymjUX.js"
+    ]
+  },
+  "artifact": {
+    "path": "E:/App_RM/release/RM-Reader-1.6.1.exe",
+    "bytes": 114747713,
+    "sha256": "7A25DA923A4933946A1BA16636EB8EA7FA78DA3426ED21782D4B0BD4A95E76BE"
+  },
+  "source": "C:/Users/ADMIN/OneDrive/Tài liệu/ChatGPT/APP đọc RM",
+  "shortcut": "E:/App_RM/RM Reader.lnk",
+  "notes": [
+    "Existing broken taskbar pins must be unpinned and recreated by the user.",
+    "Native Windows relaunch metadata and actual portable restart were tested; clicking a user taskbar pin was not automated.",
+    "AI provider regressions use mocked responses and isolated test profiles."
+  ]
+}

@@ -5,13 +5,16 @@ const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const { randomUUID, createHash } = require('node:crypto');
 const { Readable } = require('node:stream');
+const { APP_ID, configureTaskbar } = require('./taskbar.cjs');
+if (process.platform === 'win32') app.setAppUserModelId(APP_ID);
 
 protocol.registerSchemesAsPrivileged([{ scheme: 'rm-pdf', privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: true, stream: true } }]);
 protocol.registerSchemesAsPrivileged([{ scheme: 'rm-chat-image', privileges: { standard: true, secure: true, supportFetchAPI: true } }]);
 if (process.env.RM_TEST_DATA) app.setPath('userData', process.env.RM_TEST_DATA);
-let win, stateFile, state, translateEmbedded, validateSettings, validateAnnotation, eraseAnnotations, writeQueue = Promise.resolve();
+let win, stateFile, state, translateEmbedded, validateSettings, validateAnnotation, eraseAnnotations, credentialScope, providerConfig, listAIModels, normalizeOutlineColors, validateOutlineColors, writeQueue = Promise.resolve();
 let waitForAttachments=()=>Promise.resolve();
 let waitForChat=()=>Promise.resolve();
+let waitForVocabulary=()=>Promise.resolve();
 const documents = new Map(), requests = new Map(), cache = new Map();
 const defaults = { provider: 'gemini', model: 'gemini-3.8-flash', endpoint: 'http://127.0.0.1:11434', autoTranslate: false, autoFallback: true, translationFont: 16 };
 if (process.env.RM_TEST_MODE !== '1' && !app.requestSingleInstanceLock()) app.quit();
@@ -25,7 +28,20 @@ function handle(channel, fn) {
   });
 }
 function publicState() {
-  return { version: app.getVersion(), settings: { ...state.settings, hasApiKey: Boolean(state.encryptedKey) }, recent: Object.values(state.documents).sort((a,b) => b.lastOpened - a.lastOpened).slice(0, 8), vocabulary: state.vocabulary, annotations: state.annotations };
+  const profiles = Object.fromEntries(Object.entries(state.aiProfiles || {}).map(([provider, settings]) => [provider, { ...settings, hasApiKey: Boolean(encryptedKeyFor(settings)) }]));
+  const savedKeyScopes = Object.keys(state.aiKeys || {}).filter(scope => state.aiKeys[scope]);
+  if (state.encryptedKey) savedKeyScopes.push('gemini');
+  return { version: app.getVersion(), uiLanguage: state.uiLanguage, vocabularyFolders: state.vocabularyFolders, vocabularyStudy: state.vocabularyStudy, outlineColors: state.outlineColors, settings: { ...state.settings, hasApiKey: Boolean(encryptedKeyFor(state.settings)), aiProfiles: profiles, savedKeyScopes }, recent: Object.values(state.documents).sort((a,b) => b.lastOpened - a.lastOpened).slice(0, 8), vocabulary: state.vocabulary, annotations: state.annotations };
+}
+function encryptedKeyFor(settings) {
+  const scope = credentialScope(settings);
+  return scope === 'gemini' ? state.encryptedKey : state.aiKeys?.[scope];
+}
+function getApiKey(settings = state.settings) {
+  const encrypted = encryptedKeyFor(settings);
+  if (!encrypted) return '';
+  try { return safeStorage.decryptString(Buffer.from(encrypted, 'base64')); }
+  catch { throw new Error('Không đọc được API key đã lưu. Hãy nhập lại trong Cài đặt.'); }
 }
 function persist() {
   const snapshot = JSON.stringify(state, null, 2);
@@ -57,12 +73,19 @@ async function registerPdf(filename) {
 
 app.whenReady().then(async () => {
   ({ translateEmbedded, validateSettings } = await import(pathToFileURL(path.join(__dirname, '../src/core/translation.mjs')).href));
+  ({ credentialScope, providerConfig, listAIModels } = await import(pathToFileURL(path.join(__dirname, '../src/core/ai-providers.mjs')).href));
   ({ validateAnnotation, eraseAnnotations } = await import(pathToFileURL(path.join(__dirname, '../src/core/annotations.mjs')).href));
+  ({ normalizeOutlineColors, validateOutlineColors } = await import(pathToFileURL(path.join(__dirname, '../src/core/outline-colors.mjs')).href));
   stateFile = path.join(app.getPath('userData'), 'preferences.json');
   try { state = JSON.parse(await fsp.readFile(stateFile, 'utf8')); } catch { state = {}; }
   state.settings = { ...defaults, ...state.settings };
+  state.outlineColors = normalizeOutlineColors(state.outlineColors);
+  state.aiKeys ||= {};
+  state.aiProfiles ||= {};
+  state.aiProfiles[state.settings.provider] = { ...state.settings };
   state.documents ||= {};
   state.vocabulary = Array.isArray(state.vocabulary) ? state.vocabulary : [];
+  state.uiLanguage = state.uiLanguage === 'en' ? 'en' : 'vi';
   state.annotations = Array.isArray(state.annotations) ? state.annotations : [];
   protocol.handle('rm-pdf', async request => {
     const token = new URL(request.url).pathname.slice(1);
@@ -85,11 +108,11 @@ app.whenReady().then(async () => {
     return new Response(Readable.toWeb(stream), { status, headers });
   });
   handle('pdf:open', async () => {
-    const result = await dialog.showOpenDialog(win, { title: 'Mở tài liệu PDF', properties: ['openFile'], filters: [{ name: 'Tài liệu PDF', extensions: ['pdf'] }] });
+    const result = await dialog.showOpenDialog(win, { title: state.uiLanguage === 'en' ? 'Open PDF document' : 'Mở tài liệu PDF', properties: ['openFile'], filters: [{ name: state.uiLanguage === 'en' ? 'PDF documents' : 'Tài liệu PDF', extensions: ['pdf'] }] });
     return result.canceled ? null : registerPdf(result.filePaths[0]);
   });
   handle('pdf:open-many', async () => {
-    const result = await dialog.showOpenDialog(win, { title: 'Mở tài liệu PDF trong các tab', properties: ['openFile', 'multiSelections'], filters: [{ name: 'Tài liệu PDF', extensions: ['pdf'] }] });
+    const result = await dialog.showOpenDialog(win, { title: state.uiLanguage === 'en' ? 'Open PDF documents in tabs' : 'Mở tài liệu PDF trong các tab', properties: ['openFile', 'multiSelections'], filters: [{ name: state.uiLanguage === 'en' ? 'PDF documents' : 'Tài liệu PDF', extensions: ['pdf'] }] });
     if (result.canceled) return [];
     const files = [];
     for (const filename of result.filePaths) {
@@ -104,12 +127,18 @@ app.whenReady().then(async () => {
     return registerPdf(state.documents[id].path);
   });
   handle('pdf:release', token => { documents.delete(token); return true; });
-  waitForAttachments=await require('./attachments.cjs')({app,dialog,shell,handle,documents,registerPdf,getWindow:()=>win});
-  waitForChat=await require('./chat.cjs')({app,handle,documents,registerPdf,getWindow:()=>win,getSettings:()=>state.settings,getApiKey:()=>{
-    if(!state.encryptedKey)return '';
-    try{return safeStorage.decryptString(Buffer.from(state.encryptedKey,'base64'));}catch{throw new Error('Không đọc được API key đã lưu. Hãy nhập lại trong Cài đặt.');}
-  }});
+  waitForAttachments=await require('./attachments.cjs')({app,dialog,shell,handle,documents,registerPdf,getWindow:()=>win,getUILanguage:()=>state.uiLanguage});
+  waitForChat=await require('./chat.cjs')({app,handle,documents,registerPdf,getWindow:()=>win,getSettings:()=>state.settings,getApiKey});
+  waitForVocabulary=await require('./vocabulary.cjs')({app,dialog,handle,getWindow:()=>win,getState:()=>state,persist,publicState});
   handle('state:get', () => publicState());
+  handle('language:save', async language => {
+    if (!['vi','en'].includes(language)) throw new Error('Chỉ hỗ trợ tiếng Việt và tiếng Anh.');
+    state.uiLanguage = language; await persist(); return language;
+  });
+  handle('outline:colors-save', async input => {
+    state.outlineColors = validateOutlineColors(input);
+    await persist(); return state.outlineColors;
+  });
   handle('state:position', async ({ id, position }) => {
     if (!state.documents[id]) return;
     if (!position || !Number.isFinite(position.page) || !Number.isFinite(position.top) || !Number.isFinite(position.left) || !Number.isFinite(position.scale)) return;
@@ -120,25 +149,32 @@ app.whenReady().then(async () => {
     const text = typeof input?.text === 'string' ? input.text.trim() : '';
     const doc = state.documents[input?.documentId];
     const position = input?.position;
-    if (!text || text.length > 12000 || !doc || !position || !Number.isInteger(position.page) || position.page < 1 || ![position.top, position.left, position.scale].every(Number.isFinite)) throw new Error('Hãy bôi đen văn bản trong PDF để lưu vocab.');
-    const translation = typeof input.translation === 'string' ? input.translation.trim().slice(0, 24000) : '';
-    const existing = state.vocabulary.find(item => item.documentId === doc.id && item.text.toLocaleLowerCase('vi') === text.toLocaleLowerCase('vi'));
+    const manual = input?.manual === true;
+    if (!text || text.length > 12000 || (!manual && (!doc || !position || !Number.isInteger(position.page) || position.page < 1 || ![position.top, position.left, position.scale].every(Number.isFinite)))) throw new Error('Hãy bôi đen văn bản trong PDF để lưu vocab.');
+    const folderId = input.folderId || 'default';
+    if (!state.vocabularyFolders.some(folder => folder.id === folderId)) throw new Error('Hãy chọn một thư mục vocab hợp lệ.');
+    const translation = typeof input.translation === 'string' ? input.translation.trim() : '';
+    if (translation.length > 24000) throw new Error('Nghĩa của từ vượt quá độ dài cho phép.');
+    const documentId = manual ? null : doc.id;
+    const existing = state.vocabulary.find(item => item.folderId === folderId && item.documentId === documentId && item.text.toLocaleLowerCase('vi') === text.toLocaleLowerCase('vi'));
     if (existing) {
       if (translation) existing.translation = translation;
       existing.updatedAt = Date.now();
     } else {
-      state.vocabulary.unshift({ id: randomUUID(), text, translation, documentId: doc.id, documentName: doc.name, path: doc.path, page: position.page,
-        position: { documentId: doc.id, page: position.page, top: position.top, left: position.left, scale: position.scale }, createdAt: Date.now(), updatedAt: Date.now() });
+      state.vocabulary.unshift({ id: randomUUID(), text, translation, folderId, documentId, documentName: manual ? '' : doc.name, path: manual ? null : doc.path, page: manual ? null : position.page,
+        position: manual ? null : { documentId: doc.id, page: position.page, top: position.top, left: position.left, scale: position.scale }, createdAt: Date.now(), updatedAt: Date.now() });
     }
     await persist(); return publicState();
   });
   handle('vocabulary:delete', async id => {
     state.vocabulary = state.vocabulary.filter(item => item.id !== id);
+    delete state.vocabularyStudy[id];
     await persist(); return publicState();
   });
   handle('vocabulary:open', async id => {
     const entry = state.vocabulary.find(item => item.id === id);
     if (!entry) throw new Error('Không tìm thấy vocab đã lưu.');
+    if (!entry.path) throw new Error('Từ thêm thủ công không có trang PDF nguồn.');
     const info = await registerPdf(entry.path);
     return { document: info, position: { ...entry.position, documentId: info.id } };
   });
@@ -169,14 +205,26 @@ app.whenReady().then(async () => {
   });
   handle('settings:save', async input => {
     const settings = validateSettings(input);
-    if (input.clearKey) state.encryptedKey = null;
-    else if (typeof input.apiKey === 'string' && input.apiKey.trim()) {
+    const scope = credentialScope(settings);
+    let encrypted = encryptedKeyFor(settings);
+    if (input.clearKey) encrypted = null;
+    else if (typeof input.apiKey === 'string' && input.apiKey.trim() && settings.provider !== 'ollama') {
+      if (input.apiKey.length > 4096 || /[\r\n]/.test(input.apiKey)) throw new Error('API key không hợp lệ.');
       if (!safeStorage.isEncryptionAvailable()) throw new Error('Windows chưa sẵn sàng lưu API key được mã hóa. Hãy thử lại.');
-      state.encryptedKey = safeStorage.encryptString(input.apiKey.trim()).toString('base64');
+      encrypted = safeStorage.encryptString(input.apiKey.trim()).toString('base64');
     }
+    if (scope === 'gemini') state.encryptedKey = encrypted;
+    else state.aiKeys[scope] = encrypted;
+    state.aiProfiles[settings.provider] = { ...settings };
     state.settings = settings; cache.clear();
     requests.forEach(controller => controller.abort());
     await persist(); return publicState();
+  });
+  handle('ai:models', async input => {
+    const settings = providerConfig(input);
+    const apiKey = input.clearKey ? '' : (typeof input.apiKey === 'string' && input.apiKey.trim() ? input.apiKey.trim() : getApiKey(settings));
+    if (apiKey.length > 4096 || /[\r\n]/.test(apiKey)) throw new Error('API key không hợp lệ.');
+    return listAIModels({ settings, apiKey });
   });
   handle('translate', async ({ id, text }) => {
     if (typeof text !== 'string' || typeof id !== 'string') throw new Error('Yêu cầu dịch không hợp lệ.');
@@ -185,11 +233,7 @@ app.whenReady().then(async () => {
     const controller = new AbortController(); requests.set(id, controller);
     const timer = setTimeout(() => controller.abort(), 60000);
     try {
-      let apiKey = '';
-      if (state.encryptedKey) {
-        try { apiKey = safeStorage.decryptString(Buffer.from(state.encryptedKey, 'base64')); }
-        catch { throw new Error('Không đọc được API key đã lưu. Vui lòng nhập lại trong Cài đặt.'); }
-      }
+      const apiKey = getApiKey();
       const result = await translateEmbedded({ text, settings: state.settings, apiKey, signal: controller.signal, onProgress: message => { if (!controller.signal.aborted && !win.isDestroyed()) win.webContents.send('translate:progress', { id, message }); } });
       if (controller.signal.aborted) throw new Error('Đã hủy yêu cầu dịch.');
       cache.set(key, result); if (cache.size > 200) cache.delete(cache.keys().next().value);
@@ -205,10 +249,11 @@ app.whenReady().then(async () => {
   win = new BrowserWindow({
     width: 1440, height: 940, minWidth: 960, minHeight: 650, title: 'RM Reader', backgroundColor: '#f5f6f8',
     icon: path.join(__dirname, '../dist/app-taskbar.png'),
-    show: process.env.RM_TEST_MODE !== '1', autoHideMenuBar: true,
+    show: false, autoHideMenuBar: true,
     webPreferences: { preload: path.join(__dirname, 'preload.cjs'), contextIsolation: true, nodeIntegration: false, sandbox: true, spellcheck: false, backgroundThrottling: process.env.RM_TEST_MODE !== '1' }
   });
-  app.setAppUserModelId('vn.rmreader.desktop');
+  configureTaskbar(app, win);
+  if (process.env.RM_TEST_MODE !== '1') win.show();
   win.on('app-command', (event, command) => {
     if (command === 'browser-backward' || command === 'browser-forward') {
       event.preventDefault(); win.webContents.send('navigate', command === 'browser-backward' ? 'back' : 'forward');
@@ -229,5 +274,5 @@ app.on('before-quit', event => {
   if (quitting) return;
   event.preventDefault(); quitting = true;
   requests.forEach(controller => controller.abort());
-  Promise.allSettled([waitForAttachments(),waitForChat()]).then(()=>writeQueue).catch(() => {}).finally(() => app.quit());
+  Promise.allSettled([waitForAttachments(),waitForChat(),waitForVocabulary()]).then(()=>writeQueue).catch(() => {}).finally(() => app.quit());
 });

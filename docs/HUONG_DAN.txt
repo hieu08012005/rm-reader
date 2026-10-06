@@ -1,7 +1,7 @@
 RM READER — ĐỌC PDF VÀ DỊCH TÀI LIỆU NHÚNG
 
 Mở app:
-  Chạy release\RM-Reader-1.5.1.exe.
+  Chạy release\RM-Reader-1.8.0.exe hoặc RM Reader.lnk.
   Hoặc chạy release\win-unpacked\RM Reader.exe.
   Bản win-unpacked cần giữ nguyên toàn bộ thư mục đi kèm.
 
@@ -84,3 +84,79 @@ App nhớ chiều rộng bạn chọn, kể cả sau khi mở lại.
 Thu nhỏ cửa sổ sẽ tự giới hạn cho vừa; mở rộng lại khôi phục chiều rộng ưu tiên nếu đủ chỗ.
 Dùng Tab chọn vạch chia và mũi tên trái/phải để thay đổi chiều rộng 20 px.
 Câu hỏi đang viết, câu trả lời, nguồn chat và các tùy chọn thu gọn vẫn được giữ khi kéo.
+
+RM READER 1.6.0 — NHIỀU DỊCH VỤ AI VÀ MODEL TÙY CHỈNH
+
+Đóng app cũ rồi chạy release\RM-Reader-1.6.0.exe hoặc Mo_RM_Reader.cmd.
+
+1. Mở Cài đặt AI và bản dịch (nút bánh răng).
+2. Chọn Gemini, OpenAI, Claude/Anthropic, DeepSeek, OpenRouter,
+   Ollama hoặc API tương thích OpenAI.
+3. Nhập API key của dịch vụ này. Key Gemini đã lưu từ bản cũ vẫn dùng được.
+4. Bấm Tải danh sách model, chọn tên trong gợi ý hoặc tự nhập model ID.
+5. Model Chat AI để trống sẽ dùng cùng model dịch; có thể chọn riêng model chat.
+6. Nhấn Lưu cài đặt.
+
+Dịch vụ có sẵn tự điền địa chỉ API. Dịch vụ tùy chỉnh cần Base URL
+(ví dụ https://example.com/v1; LM Studio http://localhost:1234/v1).
+App hỗ trợ API chat/completions tương thích OpenAI; không thể chỉ dựa vào
+API key để tự nhận diện mọi giao thức cloud. Ollama chạy cục bộ không cần key.
+
+Model phải có quyền/hạn mức và hỗ trợ sinh văn bản. Hỏi hình/bảng cần model
+nhận ảnh. Danh sách API có thể gồm model embeddings/audio không dùng cho chat.
+Nếu API không hỗ trợ tải danh sách, tự nhập tên model trực tiếp vẫn được.
+
+Mỗi dịch vụ lưu key được mã hóa riêng bằng Windows; dịch vụ tùy chỉnh lưu
+theo Base URL. Không gửi key của Gemini sang nhà cung cấp khác. Đổi dịch vụ
+nhớ model đã lưu. Tùy chọn model dự phòng chỉ áp dụng cho Gemini.
+
+Bản dịch, hỏi ảnh/sơ đồ/bảng, liên kết nguồn PDF và nút Dừng/Thử lại được giữ.
+Dịch vụ được chọn nhận phần văn bản/ảnh và lịch sử đã gửi theo giới hạn cấu hình.
+
+Giao thức nhà cung cấp mới được kiểm thử bằng phản hồi mô phỏng trong app;
+chưa xác minh bằng tài khoản thật của các dịch vụ chưa được cung cấp key.
+Xem KET_QUA_KIEM_THU_1.6.0.json để biết kết quả kiểm tra cụ thể.
+
+
+SỬA GHIM TASKBAR (1.6.1)
+Nếu biểu tượng cũ báo lỗi shortcut, bỏ ghim nó, mở RM Reader.lnk rồi ghim lại. Shortcut trỏ tới EXE cố định trong release\win-unpacked. Bản portable 1.6.1 cũng đã đặt đường dẫn mở lại tới file portable gốc. Xem PHIEN_BAN_1.6.1.txt.
+
+
+MÀU THEO CẤP MỤC LỤC (1.7.0)
+Nhấn Màu theo cấp trong bảng Mục lục, chọn màu cho từng cấp hoặc nhập R/G/B từ 0–255, rồi Lưu màu. Có xem trước, Hủy, Màu mặc định và Thêm cấp. Màu được nhớ khi mở lại và dùng chung cho mọi PDF. Xem PHIEN_BAN_1.7.0.txt.
+
+
+CTRL+Z QUAY LẠI (1.7.1)
+Sau khi nhấp liên kết xanh hoặc mục lục, Ctrl+Z quay lại trang, cuộn và zoom trước đó, giống Alt+←. Trong ô chat / tìm kiếm / trình sửa văn bản, Ctrl+Z vẫn hoàn tác nội dung nhập. Xem PHIEN_BAN_1.7.1.txt.
+
+RM READER 1.8.0 — NGÔN NGỮ, FOLDER VOCAB VÀ ÔN TẬP
+
+Đóng bản app cũ, mở RM Reader.lnk hoặc release\win-unpacked\RM Reader.exe.
+Bản portable: release\RM-Reader-1.8.0.exe. Kiểm tra v1.8.0 trên thanh tab.
+
+1. Cài đặt → Ngôn ngữ giao diện → Tiếng Việt hoặc English.
+   Áp dụng ngay, lưu khi khởi động lại. Nghĩa vocab/bản dịch giữ nguyên.
+
+2. Bôi đen từ trong PDF → Lưu vocab → chọn folder → kiểm tra nghĩa → Lưu.
+   Folder là thư mục phân loại trong app, ví dụ GPIO, UART hoặc từng bài học.
+   Vocab cũ giữ trong Chưa phân loại.
+
+3. Mở biểu tượng quyển sách → chọn folder.
+   Tạo thư mục, Đổi tên, Thêm từ, Sửa / chuyển hỗ trợ quản lý từng bài.
+   Folder có từ cần chuyển hết từ sang folder khác trước khi xóa.
+   Nhấn tên PDF trong một từ để về đúng vị trí gốc.
+
+4. Xuất folder ra PDF → chọn tên và nơi lưu trên máy.
+   Chỉ xuất folder đang chọn, không xuất tất cả các folder.
+   Ô tìm kiếm không làm thay đổi các từ của folder được xuất.
+   PDF A4 có ô từ/nghĩa tách rõ, nguồn PDF nếu có và số trang.
+
+5. Ba chế độ ôn tập theo folder:
+   - Flashcard: lật để hiện nghĩa, chọn Đã nhớ hoặc Chưa nhớ.
+   - Viết kiểm tra: nhìn nghĩa và viết từ, Kiểm tra rồi Từ tiếp theo.
+     Không phân biệt hoa/thường hay khoảng trắng thừa; vẫn phân biệt dấu.
+   - Nối từ với nghĩa: chọn từ bên trái và nghĩa bên phải; tối đa 6 cặp/lượt,
+     hoàn thành lượt để sang các từ tiếp theo trong folder.
+   Từ chưa có nghĩa được bỏ qua. Nối từ bỏ bớt từ/nghĩa trùng để tránh mơ hồ.
+   Mỗi phiên tối đa 2.000 từ. Kết quả đúng/sai được lưu để xem lại.
+   Học vocab không cần gọi API AI.
